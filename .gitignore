@@ -1,0 +1,56 @@
+# DEPENDANCES
+node_modules/
+**/node_modules/
+
+# VARIABLES SENSIBLES
+.env
+.env.*
+!.env.example
+!**/.env.example
+
+# FICHIERS GENERES
+dist/
+www/
+coverage/
+.angular/
+.ionic/
+
+# FICHIERS SYSTEME
+.DS_Store
+Thumbs.db
+
+# EDITEURS
+.vscode/
+.idea/
+
+# FICHIERS DE LOG
+*.log
+
+
+# DEPENDANCES
+node_modules/
+**/node_modules/
+
+# VARIABLES D'ENVIRONNEMENT
+.env
+.env.*
+!.env.example
+!**/.env.example
+
+# FICHIERS GENERES
+dist/
+www/
+coverage/
+.angular/
+.ionic/
+
+# FICHIERS DE LOG
+*.log
+
+# EDITEURS
+.vscode/
+.idea/
+
+# SYSTEME
+.DS_Store
+Thumbs.db
