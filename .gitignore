@@ -54,3 +54,11 @@ coverage/
 # SYSTEME
 .DS_Store
 Thumbs.db
+
+
+# FICHIERS GENERES TYPESCRIPT
+dist/
+backend/src/**/*.js
+backend/src/**/*.js.map
+backend/src/**/*.d.ts
+backend/src/**/*.d.ts.map
