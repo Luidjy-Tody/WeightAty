@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/profil" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-title>Mes colis</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="colis-content">
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
+    <ion-refresher-content
+      pullingText="Tirer pour actualiser"
+      refreshingSpinner="crescent"
+      refreshingText="Actualisation…"
+    ></ion-refresher-content>
+  </ion-refresher>
+
+  @if (loading()) {
+    <div class="skeleton">
+      <ion-skeleton-text [animated]="true" class="skeleton__card"></ion-skeleton-text>
+      <ion-skeleton-text [animated]="true" class="skeleton__card"></ion-skeleton-text>
+    </div>
+  } @else if (error()) {
+    <div class="state">
+      <ion-icon class="state__icon" name="alert-circle-outline" aria-hidden="true"></ion-icon>
+      <p class="state__message">{{ errorMessage() }}</p>
+      <ion-button fill="solid" (click)="retry()">Réessayer</ion-button>
+    </div>
+  } @else if (colis().length > 0) {
+    <div class="list">
+      @for (item of colis(); track item.id) {
+        <app-parcel-card [colis]="item" />
+      }
+    </div>
+
+    @if (hasMore()) {
+      <ion-button class="list__more" fill="clear" [disabled]="loadingMore()" (click)="loadMore()">
+        Afficher plus de colis
+      </ion-button>
+    }
+  } @else {
+    <div class="state">
+      <ion-icon class="state__icon" name="cube-outline" aria-hidden="true"></ion-icon>
+      <p class="state__message">Vous n'avez aucun colis.</p>
+      <ion-button fill="solid" routerLink="/recherche">Rechercher un trajet</ion-button>
+    </div>
+  }
+</ion-content>

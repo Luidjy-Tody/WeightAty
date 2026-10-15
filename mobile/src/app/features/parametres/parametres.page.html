@@ -1,0 +1,54 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <app-round-icon-button icon="chevron-back" label="Revenir à mon profil" (clicked)="goBack()" />
+    </ion-buttons>
+    <ion-title>Paramètres</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="parametres-content">
+  @if (loading()) {
+    <div class="parametres">
+      <ion-skeleton-text [animated]="true" class="skeleton__card"></ion-skeleton-text>
+      <ion-skeleton-text [animated]="true" class="skeleton__button"></ion-skeleton-text>
+    </div>
+  } @else if (error()) {
+    <div class="state">
+      <ion-icon class="state__icon" name="alert-circle-outline" aria-hidden="true"></ion-icon>
+      <p class="state__message">{{ errorMessage() }}</p>
+      <ion-button fill="solid" (click)="retry()">Réessayer</ion-button>
+    </div>
+  } @else {
+    <div class="parametres">
+      <app-menu-list>
+        <app-menu-item
+          icon="notifications-outline"
+          title="Notifications"
+          subtitle="Messages, trajets et paiements"
+          link="/parametres/notifications"
+        />
+        <app-menu-item
+          icon="shield-checkmark-outline"
+          title="Confidentialité"
+          subtitle="Visibilité et données personnelles"
+          link="/parametres/confidentialite"
+        />
+        <app-menu-item
+          icon="person-outline"
+          title="Sécurité du compte"
+          subtitle="Mot de passe et connexion"
+          link="/parametres/securite"
+        />
+        <app-menu-item
+          icon="mail-outline"
+          title="Langue"
+          [subtitle]="currentLanguage()"
+          link="/parametres/langue"
+        />
+      </app-menu-list>
+
+      <button type="button" class="logout-button" (click)="logout()">Se déconnecter</button>
+    </div>
+  }
+</ion-content>

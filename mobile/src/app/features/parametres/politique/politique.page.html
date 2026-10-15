@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <app-round-icon-button
+        icon="chevron-back"
+        label="Revenir à la confidentialité"
+        (clicked)="goBack()"
+      />
+    </ion-buttons>
+    <ion-title>Politique de confidentialité</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="politique-content">
+  <div class="page">
+    @for (section of sections; track section.title) {
+      <section class="policy-section">
+        <h2 class="policy-section__title">{{ section.title }}</h2>
+        <p class="policy-section__body">{{ section.body }}</p>
+      </section>
+    }
+
+    <p class="page__note">
+      Ce texte présente les principes appliqués par l'application. Il pourra être
+      complété pour répondre aux obligations réglementaires.
+    </p>
+  </div>
+</ion-content>

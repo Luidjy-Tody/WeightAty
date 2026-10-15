@@ -1,0 +1,23 @@
+<article class="review">
+  <app-rating-stars class="review__stars" [value]="review().note" size="sm" />
+
+  @if (review().commentaire) {
+    <p class="review__comment">« {{ review().commentaire }} »</p>
+  }
+
+  @if (review().tags?.length) {
+    <div class="review__tags">
+      @for (tag of review().tags; track tag) {
+        <span class="review__tag">{{ tag }}</span>
+      }
+    </div>
+  }
+
+  <footer class="review__meta">
+    <span class="review__author">{{ authorLabel() }}</span>
+
+    <time class="review__date" [attr.datetime]="review().createdAt">
+      {{ review().createdAt | tempsRelatif }}
+    </time>
+  </footer>
+</article>

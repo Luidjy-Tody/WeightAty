@@ -1,0 +1,60 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <app-round-icon-button icon="chevron-back" label="Revenir aux paramètres" (clicked)="goBack()" />
+    </ion-buttons>
+    <ion-title>Notifications</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="notifications-content">
+  @if (loading()) {
+    <div class="page">
+      <ion-skeleton-text [animated]="true" class="skeleton__card"></ion-skeleton-text>
+    </div>
+  } @else if (error()) {
+    <div class="state">
+      <ion-icon class="state__icon" name="alert-circle-outline" aria-hidden="true"></ion-icon>
+      <p class="state__message">{{ errorMessage() }}</p>
+      <ion-button fill="solid" (click)="retry()">Réessayer</ion-button>
+    </div>
+  } @else if (preferences(); as prefs) {
+    <div class="page">
+      <p class="page__intro">
+        Choisissez les alertes que vous souhaitez recevoir. Chaque changement est
+        enregistré automatiquement.
+      </p>
+
+      <div class="wat-card toggle-card">
+        <app-toggle-row
+          title="Messages"
+          description="Nouveaux messages reçus"
+          ariaLabel="Activer les notifications de messages"
+          [checked]="prefs.messages"
+          (changed)="toggle('messages', $event)"
+        />
+
+        <app-toggle-row
+          title="Trajets"
+          description="Nouvelles demandes et changements de statut"
+          ariaLabel="Activer les notifications de trajets"
+          [checked]="prefs.trajets"
+          (changed)="toggle('trajets', $event)"
+        />
+
+        <app-toggle-row
+          title="Paiements"
+          description="Rémunération libérée et paiements reçus"
+          ariaLabel="Activer les notifications de paiements"
+          [checked]="prefs.paiements"
+          (changed)="toggle('paiements', $event)"
+        />
+      </div>
+
+      <p class="page__note">
+        Les notifications push ne sont pas encore activées dans l'application : vos
+        préférences sont enregistrées et seront appliquées dès leur mise en place.
+      </p>
+    </div>
+  }
+</ion-content>

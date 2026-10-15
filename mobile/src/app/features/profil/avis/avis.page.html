@@ -1,0 +1,64 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <app-round-icon-button
+        icon="chevron-back"
+        label="Revenir à mon profil"
+        (clicked)="goBack()"
+      />
+    </ion-buttons>
+    <ion-title>Mes évaluations</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="avis-content">
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
+    <ion-refresher-content
+      pullingText="Tirer pour actualiser"
+      refreshingSpinner="crescent"
+      refreshingText="Actualisation…"
+    ></ion-refresher-content>
+  </ion-refresher>
+
+  @if (loading()) {
+    <div class="avis">
+      <ion-skeleton-text [animated]="true" class="skeleton__summary"></ion-skeleton-text>
+      <ion-skeleton-text [animated]="true" class="skeleton__card"></ion-skeleton-text>
+      <ion-skeleton-text [animated]="true" class="skeleton__card"></ion-skeleton-text>
+    </div>
+  } @else if (error()) {
+    <div class="state">
+      <ion-icon class="state__icon" name="alert-circle-outline" aria-hidden="true"></ion-icon>
+      <p class="state__message">{{ errorMessage() }}</p>
+      <ion-button fill="solid" (click)="retry()">Réessayer</ion-button>
+    </div>
+  } @else {
+    <div class="avis">
+      <app-rating-summary-card [moyenne]="moyenne()" [total]="total()" />
+
+      @if (items().length > 0) {
+        <div class="avis__list">
+          @for (review of items(); track review.id) {
+            <app-review-card [review]="review" />
+          }
+        </div>
+
+        @if (hasMore()) {
+          <ion-button
+            class="avis__more"
+            fill="clear"
+            [disabled]="loadingMore()"
+            (click)="loadMore()"
+          >
+            Afficher plus d'avis
+          </ion-button>
+        }
+      } @else {
+        <div class="state state--inline">
+          <ion-icon class="state__icon" name="star-outline" aria-hidden="true"></ion-icon>
+          <p class="state__message">Vous n'avez pas encore reçu d'avis.</p>
+        </div>
+      }
+    </div>
+  }
+</ion-content>

@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <app-round-icon-button icon="chevron-back" label="Retour" (clicked)="goBack()" />
+    </ion-buttons>
+    <ion-title>Rémunération</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="remuneration-content">
+  @if (loading()) {
+    <div class="loader" role="status" aria-live="polite">
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+  } @else if (error()) {
+    <div class="state">
+      <ion-icon class="state__icon" name="alert-circle-outline" aria-hidden="true"></ion-icon>
+      <p class="state__message">{{ errorMessage() }}</p>
+      <ion-button fill="solid" (click)="load()">Réessayer</ion-button>
+    </div>
+  } @else if (remuneration(); as detail) {
+    <app-result-screen
+      icon="wallet-outline"
+      title="Rémunération libérée"
+      message="La livraison est terminée. Votre rémunération a été créditée sur votre portefeuille Weight'Aty."
+    >
+      <article class="wallet-card">
+        <p class="wallet-card__label">Montant reçu</p>
+        <p class="wallet-card__amount">{{ montantLabel() }}</p>
+        <p class="wallet-card__balance">
+          Solde disponible
+          <strong>{{ soldeLabel() }}</strong>
+        </p>
+      </article>
+
+      <ion-button class="result-action" expand="block" routerLink="/paiement">
+        Voir mes paiements
+      </ion-button>
+
+      <a class="result-link" routerLink="/profil">Retour à l'accueil</a>
+    </app-result-screen>
+  }
+</ion-content>

@@ -1,0 +1,59 @@
+.infos-content {
+  --background: var(--wat-bg);
+  --padding-bottom: calc(32px + env(safe-area-inset-bottom));
+}
+
+.infos {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 18px 16px 8px;
+}
+
+.infos__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.infos__submit {
+  min-height: 52px;
+  margin-top: 6px;
+  --border-radius: 26px;
+  --box-shadow: 0 10px 22px rgba(16, 185, 129, 0.28);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* --- États de chargement / erreur ------------------------------------------ */
+.loader,
+.state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 72px 32px;
+  text-align: center;
+  color: var(--wat-muted);
+}
+
+.state__message {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* Champ de fichier masqué mais cliquable par script. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

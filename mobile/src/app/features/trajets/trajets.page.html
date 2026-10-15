@@ -1,0 +1,61 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/profil" text=""></ion-back-button>
+    </ion-buttons>
+
+    <ion-title>Trajets publiés</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button
+        class="add-button"
+        fill="clear"
+        routerLink="/trajets/nouveau"
+        aria-label="Ajouter un trajet"
+      >
+        <ion-icon slot="start" name="add-outline" aria-hidden="true"></ion-icon>
+        Ajouter
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="trajets-content">
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
+    <ion-refresher-content
+      pullingText="Tirer pour actualiser"
+      refreshingSpinner="crescent"
+      refreshingText="Actualisation…"
+    ></ion-refresher-content>
+  </ion-refresher>
+
+  @if (loading()) {
+    <div class="skeleton">
+      <ion-skeleton-text [animated]="true" class="skeleton__line"></ion-skeleton-text>
+      <ion-skeleton-text [animated]="true" class="skeleton__card"></ion-skeleton-text>
+      <ion-skeleton-text [animated]="true" class="skeleton__card"></ion-skeleton-text>
+    </div>
+  } @else if (error()) {
+    <div class="state">
+      <ion-icon class="state__icon" name="alert-circle-outline" aria-hidden="true"></ion-icon>
+      <p class="state__message">{{ errorMessage() }}</p>
+      <ion-button fill="solid" (click)="retry()">Réessayer</ion-button>
+    </div>
+  } @else {
+    <p class="trajets-count">{{ countLabel() }}</p>
+
+    @if (trajets().length > 0) {
+      <div class="list">
+        @for (trajet of trajets(); track trajet.id) {
+          <app-trajet-card [trajet]="trajet" />
+        }
+      </div>
+    } @else {
+      <div class="state">
+        <ion-icon class="state__icon" name="airplane-outline" aria-hidden="true"></ion-icon>
+        <p class="state__message">Vous n'avez publié aucun trajet pour le moment.</p>
+        <ion-button fill="solid" routerLink="/trajets/nouveau">Publier un trajet</ion-button>
+      </div>
+    }
+  }
+</ion-content>

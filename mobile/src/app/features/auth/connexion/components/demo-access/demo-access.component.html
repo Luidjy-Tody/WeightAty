@@ -1,0 +1,22 @@
+@if (accounts().length > 0) {
+  <section class="demo" aria-labelledby="demo-title">
+    <h2 id="demo-title" class="demo__title">Accès démo</h2>
+
+    <div class="demo__chips">
+      @for (account of accounts(); track account.role) {
+        <button
+          type="button"
+          class="demo__chip"
+          [disabled]="busyRole() !== null"
+          [attr.aria-busy]="busyRole() === account.role"
+          (click)="roleSelected.emit(account.role)"
+        >
+          @if (busyRole() === account.role) {
+            <ion-spinner name="crescent"></ion-spinner>
+          }
+          {{ account.label }}
+        </button>
+      }
+    </div>
+  </section>
+}

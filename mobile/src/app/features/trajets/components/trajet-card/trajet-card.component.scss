@@ -1,0 +1,55 @@
+.trajet {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  background: var(--wat-surface);
+  border: 1px solid var(--wat-border);
+  border-radius: var(--wat-radius-lg);
+  box-shadow: var(--wat-shadow-card);
+}
+
+.trajet__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.trajet__dates {
+  margin: 0;
+  color: var(--wat-muted);
+  font-size: 13px;
+}
+
+.trajet__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.trajet__chip {
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--wat-emerald-50);
+  color: var(--wat-green-800);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.trajet__flight {
+  margin: 0;
+  color: var(--wat-muted);
+  font-size: 13px;
+}
+
+.trajet__action {
+  min-height: 44px;
+  --border-radius: var(--wat-radius-md);
+  --border-width: 1.5px;
+  --border-color: var(--wat-emerald-500);
+  --color: var(--wat-green-800);
+  --background: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+}

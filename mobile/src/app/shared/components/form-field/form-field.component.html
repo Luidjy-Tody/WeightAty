@@ -1,0 +1,21 @@
+<div class="form-field">
+  <ion-input
+    #nativeInput
+    class="wat-label-bold"
+    labelPlacement="stacked"
+    fill="outline"
+    [label]="label()"
+    [placeholder]="placeholder()"
+    [type]="type()"
+    [inputmode]="inputmode() ?? undefined"
+    [autocomplete]="autocomplete() ?? undefined"
+    [autocapitalize]="autocapitalize() ?? undefined"
+    [spellcheck]="false"
+    [enterkeyhint]="enterkeyhint()"
+    [formControl]="control()"
+  ></ion-input>
+
+  @if (errorText(); as message) {
+    <p class="field-error" role="alert">{{ message }}</p>
+  }
+</div>

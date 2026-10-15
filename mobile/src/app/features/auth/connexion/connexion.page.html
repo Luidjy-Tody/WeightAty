@@ -1,0 +1,33 @@
+<ion-content class="connexion-content">
+  <div class="connexion">
+    <app-brand-header />
+
+    <section class="card" aria-labelledby="connexion-title">
+      <p class="card__eyebrow">Bienvenue</p>
+      <h2 id="connexion-title" class="card__title">Connectez-vous</h2>
+      <p class="card__subtitle">Retrouvez vos envois et vos trajets en toute simplicité.</p>
+
+      <app-login-form
+        [loading]="loading()"
+        [serverError]="serverError()"
+        (submitted)="onLogin($event)"
+      />
+
+      <div class="separator">
+        <span class="separator__line" aria-hidden="true"></span>
+        <span class="separator__label">ou</span>
+        <span class="separator__line" aria-hidden="true"></span>
+      </div>
+
+      <ion-button class="card__register" expand="block" fill="outline" routerLink="/auth/inscription">
+        S’inscrire
+      </ion-button>
+    </section>
+
+    <app-demo-access
+      [accounts]="demoAccounts()"
+      [busyRole]="demoBusyRole()"
+      (roleSelected)="onDemoSelect($event)"
+    />
+  </div>
+</ion-content>

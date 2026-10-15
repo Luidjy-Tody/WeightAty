@@ -1,0 +1,64 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/profil" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-title>Mes paiements</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="paiement-content">
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
+    <ion-refresher-content
+      pullingText="Tirer pour actualiser"
+      refreshingSpinner="crescent"
+      refreshingText="Actualisation…"
+    ></ion-refresher-content>
+  </ion-refresher>
+
+  @if (loading()) {
+    <div class="skeleton">
+      <ion-skeleton-text [animated]="true" class="skeleton__row"></ion-skeleton-text>
+      <ion-skeleton-text [animated]="true" class="skeleton__row"></ion-skeleton-text>
+    </div>
+  } @else if (error()) {
+    <div class="state">
+      <ion-icon class="state__icon" name="alert-circle-outline" aria-hidden="true"></ion-icon>
+      <p class="state__message">{{ errorMessage() }}</p>
+      <ion-button fill="solid" (click)="retry()">Réessayer</ion-button>
+    </div>
+  } @else if (paiements().length > 0) {
+    <div class="list">
+      @for (item of paiements(); track item.id) {
+        @if (item.sens === 'recu' && item.colisId) {
+          <a class="paiement" [routerLink]="['/colis', item.colisId, 'remuneration']">
+            <span class="paiement__main">
+              <span class="paiement__label">Rémunération reçue</span>
+              <span class="paiement__peer">
+                {{ item.contrepartie?.displayName ?? '—' }} · {{ item.colisReference ?? '' }}
+              </span>
+              <span class="paiement__date">{{ date(item) }}</span>
+            </span>
+            <span class="paiement__amount paiement__amount--in">{{ amount(item) }}</span>
+          </a>
+        } @else {
+          <article class="paiement">
+            <span class="paiement__main">
+              <span class="paiement__label">Paiement envoyé</span>
+              <span class="paiement__peer">
+                {{ item.contrepartie?.displayName ?? '—' }} · {{ item.colisReference ?? '' }}
+              </span>
+              <span class="paiement__date">{{ date(item) }}</span>
+            </span>
+            <span class="paiement__amount">{{ amount(item) }}</span>
+          </article>
+        }
+      }
+    </div>
+  } @else {
+    <div class="state">
+      <ion-icon class="state__icon" name="receipt-outline" aria-hidden="true"></ion-icon>
+      <p class="state__message">Aucun paiement pour le moment.</p>
+    </div>
+  }
+</ion-content>

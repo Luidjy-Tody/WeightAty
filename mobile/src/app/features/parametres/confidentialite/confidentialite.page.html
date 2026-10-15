@@ -1,0 +1,76 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <app-round-icon-button icon="chevron-back" label="Revenir aux paramètres" (clicked)="goBack()" />
+    </ion-buttons>
+    <ion-title>Confidentialité</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="confidentialite-content">
+  @if (loading()) {
+    <div class="page">
+      <ion-skeleton-text [animated]="true" class="skeleton__card"></ion-skeleton-text>
+    </div>
+  } @else if (error()) {
+    <div class="state">
+      <ion-icon class="state__icon" name="alert-circle-outline" aria-hidden="true"></ion-icon>
+      <p class="state__message">{{ errorMessage() }}</p>
+      <ion-button fill="solid" (click)="retry()">Réessayer</ion-button>
+    </div>
+  } @else if (preferences(); as prefs) {
+    <div class="page">
+      <h2 class="section-title">Visibilité de mon profil</h2>
+
+      <div class="wat-card toggle-card">
+        <app-toggle-row
+          title="Afficher mon nom complet"
+          description="Sinon, votre nom apparaît sous la forme « Prénom N. »"
+          ariaLabel="Afficher mon nom complet"
+          [checked]="prefs.fullName"
+          (changed)="toggle('fullName', $event)"
+        />
+
+        <app-toggle-row
+          title="Afficher ma photo de profil"
+          description="Votre photo est visible sur vos trajets et vos avis"
+          ariaLabel="Afficher ma photo de profil"
+          [checked]="prefs.photo"
+          (changed)="toggle('photo', $event)"
+        />
+
+        <app-toggle-row
+          title="Afficher mon nombre de voyages"
+          description="Le nombre de trajets publiés est visible par les autres membres"
+          ariaLabel="Afficher mon nombre de voyages"
+          [checked]="prefs.trips"
+          (changed)="toggle('trips', $event)"
+        />
+      </div>
+
+      <h2 class="section-title">Données personnelles</h2>
+
+      <div class="wat-card link-card">
+        <a class="link-row" routerLink="/parametres/politique">
+          <span class="link-row__text">Politique de confidentialité</span>
+          <ion-icon name="chevron-forward" aria-hidden="true"></ion-icon>
+        </a>
+      </div>
+
+      <button
+        type="button"
+        class="danger-button"
+        [disabled]="deleting()"
+        (click)="deleteAccount()"
+      >
+        Supprimer mon compte
+      </button>
+
+      <p class="page__note">
+        La suppression efface votre identité (nom, e-mail, téléphone, adresse, photo).
+        Les paiements et les avis sont conservés de façon anonyme. Elle est refusée si
+        un colis ou un trajet est en cours.
+      </p>
+    </div>
+  }
+</ion-content>

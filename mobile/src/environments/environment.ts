@@ -3,7 +3,17 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  /**
+   * URL de base de l'API REST Weight'Aty.
+   *
+   * En développement, on utilise un chemin RELATIF : les appels `/api/...` sont
+   * relayés vers le backend par le proxy du serveur de dev (voir
+   * `mobile/proxy.conf.json`). Il n'y a donc qu'une seule adresse à retenir,
+   * celle de l'app (`ionic serve`), aussi bien depuis le PC que depuis un
+   * téléphone sur le même Wi-Fi.
+   */
+  apiUrl: '/api'
 };
 
 /*

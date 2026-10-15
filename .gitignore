@@ -62,3 +62,9 @@ backend/src/**/*.js
 backend/src/**/*.js.map
 backend/src/**/*.d.ts
 backend/src/**/*.d.ts.map
+
+# DECLARATIONS DE TYPES ECRITES A LA MAIN
+!backend/src/types/express.d.ts
+
+# STOCKAGE LOCAL (photos de profil — hors dépôt)
+backend/uploads/

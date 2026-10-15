@@ -1,0 +1,67 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <app-round-icon-button icon="chevron-back" label="Revenir aux paramètres" (clicked)="goBack()" />
+    </ion-buttons>
+    <ion-title>Sécurité du compte</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="securite-content">
+  <div class="page">
+    <p class="page__intro">
+      Choisissez un mot de passe d'au moins 8 caractères, différent de l'actuel.
+    </p>
+
+    @if (serverError(); as message) {
+      <p class="page__error" role="alert">{{ message }}</p>
+    }
+
+    <form class="form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <app-password-field
+        [control]="form.controls.currentPassword"
+        label="Mot de passe actuel"
+        placeholder="Votre mot de passe actuel"
+        autocomplete="current-password"
+        [errorText]="messages()['currentPassword']"
+      />
+
+      <app-password-field
+        [control]="form.controls.newPassword"
+        label="Nouveau mot de passe"
+        placeholder="Votre nouveau mot de passe"
+        autocomplete="new-password"
+        [errorText]="messages()['newPassword']"
+      />
+
+      @if (strength().score > 0) {
+        <div [class]="'strength strength--' + strength().score">
+          <span class="strength__bar"></span>
+          <span class="strength__bar"></span>
+          <span class="strength__bar"></span>
+          <span class="strength__label">{{ strength().label }}</span>
+        </div>
+      }
+
+      <app-password-field
+        [control]="form.controls.confirmPassword"
+        label="Confirmer le nouveau mot de passe"
+        placeholder="Confirmez le mot de passe"
+        autocomplete="new-password"
+        [errorText]="messages()['confirmPassword']"
+      />
+
+      <ion-button class="form__submit" type="submit" expand="block" [disabled]="!canSubmit()">
+        @if (saving()) {
+          <ion-spinner slot="start" name="crescent"></ion-spinner>
+        }
+        Enregistrer
+      </ion-button>
+    </form>
+
+    <p class="page__note">
+      Pour votre sécurité, les autres appareils connectés seront déconnectés après le
+      changement de mot de passe.
+    </p>
+  </div>
+</ion-content>

@@ -1,0 +1,18 @@
+<div class="date-field">
+  <ion-input
+    #nativeInput
+    labelPlacement="stacked"
+    fill="outline"
+    type="date"
+    [label]="label()"
+    [formControl]="control()"
+    [min]="min() ?? undefined"
+    enterkeyhint="next"
+  >
+    <ion-icon slot="end" name="calendar-outline" aria-hidden="true"></ion-icon>
+  </ion-input>
+
+  @if (errorText(); as message) {
+    <p class="field-error" role="alert">{{ message }}</p>
+  }
+</div>

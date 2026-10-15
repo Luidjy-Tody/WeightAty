@@ -1,0 +1,56 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/profil" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-title>Signaler un problème</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="signaler-content">
+  <div class="signaler">
+    <p class="signaler__intro">
+      Décrivez le problème rencontré. Notre équipe examinera votre signalement.
+    </p>
+
+    <ion-select
+      class="wat-label-bold"
+      label="Motif"
+      labelPlacement="stacked"
+      fill="outline"
+      placeholder="Choisir un motif"
+      [value]="motif()"
+      (ionChange)="onMotif($event)"
+    >
+      @for (item of motifs; track item.value) {
+        <ion-select-option [value]="item.value">{{ item.label }}</ion-select-option>
+      }
+    </ion-select>
+
+    <ion-textarea
+      class="wat-label-bold"
+      label="Message (facultatif)"
+      labelPlacement="stacked"
+      fill="outline"
+      placeholder="Décrivez la situation…"
+      [value]="message()"
+      [maxlength]="messageMax"
+      [counter]="true"
+      [autoGrow]="true"
+      [attr.rows]="5"
+      (ionInput)="onMessage($event)"
+    ></ion-textarea>
+
+    <ion-button
+      class="signaler__submit"
+      expand="block"
+      [disabled]="!canSubmit()"
+      (click)="submit()"
+    >
+      @if (submitting()) {
+        <ion-spinner slot="start" name="crescent"></ion-spinner>
+      }
+      Envoyer le signalement
+    </ion-button>
+  </div>
+</ion-content>

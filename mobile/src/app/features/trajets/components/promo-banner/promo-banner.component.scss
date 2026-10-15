@@ -1,0 +1,46 @@
+.banner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px;
+  border-radius: var(--wat-radius-lg);
+  background: linear-gradient(140deg, var(--wat-green-900), var(--wat-green-950));
+  box-shadow: 0 10px 24px rgba(11, 61, 44, 0.18);
+}
+
+.banner__icon {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 16px;
+  background: rgba(16, 185, 129, 0.2);
+  color: var(--wat-emerald-400);
+  /* Légère inclinaison, comme le logo de la marque. */
+  transform: rotate(-8deg);
+}
+
+.banner__icon ion-icon {
+  font-size: 24px;
+  transform: rotate(8deg);
+}
+
+.banner__text {
+  min-width: 0;
+}
+
+.banner__title {
+  margin: 0 0 2px;
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.banner__subtitle {
+  margin: 0;
+  color: var(--wat-emerald-100);
+  font-size: 13px;
+  line-height: 1.4;
+}
