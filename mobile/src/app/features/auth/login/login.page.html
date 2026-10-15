@@ -1,0 +1,57 @@
+<ion-content class="auth-page" [fullscreen]="true">
+  <main class="auth-container">
+    <header class="brand">
+      <div class="logo" aria-hidden="true">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 11l10-5 10 5v10l-10 5-10-5z"/><path d="M6 11l10 5 10-5M16 16v10"/></svg>
+      </div>
+      <div class="name">P2Ppost</div>
+      <p>Envoyez et transportez des colis entre particuliers.</p>
+    </header>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <h1>Connexion</h1>
+
+      <div class="field">
+        <ion-input
+          label="Adresse e-mail"
+          labelPlacement="stacked"
+          fill="outline"
+          type="email"
+          formControlName="email"
+          autocomplete="email"
+          placeholder="nom@exemple.com"
+        ></ion-input>
+        <p class="error" *ngIf="showError('email', 'required')">L'adresse e-mail est obligatoire.</p>
+        <p class="error" *ngIf="showError('email', 'email')">Saisissez une adresse e-mail valide.</p>
+      </div>
+
+      <div class="field">
+        <ion-input
+          label="Mot de passe"
+          labelPlacement="stacked"
+          fill="outline"
+          type="password"
+          formControlName="motDePasse"
+          autocomplete="current-password"
+          placeholder="Votre mot de passe"
+        >
+          <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+        </ion-input>
+        <p class="error" *ngIf="showError('motDePasse', 'required')">Le mot de passe est obligatoire.</p>
+        <a class="forgot" routerLink="/login">Mot de passe oublié ?</a>
+      </div>
+
+      <p class="error form-error" role="alert" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+      <ion-button type="submit" expand="block" size="large" [disabled]="loading">
+        <ion-spinner name="crescent" *ngIf="loading"></ion-spinner>
+        <span *ngIf="!loading">Se connecter</span>
+      </ion-button>
+    </form>
+
+    <footer class="signup">
+      <span>Pas encore de compte ?</span>
+      <ion-button routerLink="/register" fill="outline" expand="block" size="large">Créer un compte</ion-button>
+    </footer>
+  </main>
+</ion-content>

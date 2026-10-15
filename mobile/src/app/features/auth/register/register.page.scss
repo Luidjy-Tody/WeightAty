@@ -1,0 +1,104 @@
+// Couleurs locales à la page : ne pas toucher à theme/variables.scss (fichier commun).
+:host {
+  --p2p-teal: #0b6e6e;
+  --p2p-ink: #0f2b2e;
+  --p2p-muted: #4f6669;
+  --p2p-bg: #f5f8f7;
+  --p2p-error: #b3261e;
+}
+
+.auth-page {
+  --background: var(--p2p-bg);
+  color: var(--p2p-ink);
+}
+
+.auth-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  box-sizing: border-box;
+  padding: 24px;
+}
+
+.back-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-left: -10px;
+  color: var(--p2p-ink);
+}
+
+.auth-header {
+  margin-top: 8px;
+
+  h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+  }
+
+  p {
+    margin: 0;
+    font-size: 16px;
+    line-height: 24px;
+    color: var(--p2p-muted);
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 28px;
+}
+
+.row {
+  display: flex;
+  gap: 12px;
+
+  .field {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+ion-input {
+  --highlight-color-focused: var(--p2p-teal);
+  --border-radius: 12px;
+  --background: #fff;
+  min-height: 52px;
+}
+
+.error {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: var(--p2p-error);
+}
+
+.form-error {
+  margin: 0;
+  font-size: 14px;
+}
+
+ion-button {
+  --background: var(--p2p-teal);
+  --border-radius: 12px;
+  font-weight: 700;
+  margin: 8px 0 0;
+}
+
+.switch {
+  margin: 4px 0 0;
+  text-align: center;
+  font-size: 14px;
+  color: var(--p2p-muted);
+
+  a {
+    color: var(--p2p-teal);
+    font-weight: 700;
+    text-decoration: none;
+  }
+}
