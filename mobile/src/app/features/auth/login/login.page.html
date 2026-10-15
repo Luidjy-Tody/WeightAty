@@ -1,0 +1,90 @@
+<ion-content [fullscreen]="true" class="login-content">
+  <div class="app-stage">
+    <div class="phone-shell">
+      <main class="auth-page">
+        <div class="auth-hero">
+          <div class="logo">
+            <span class="logo-mark">
+              <svg class="icon" width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M22 2 9.5 14.5M22 2l-7 20-4-9-9-4 20-7Z"></path>
+              </svg>
+            </span>
+            <span>Weight’Aty</span>
+          </div>
+          <p>Vos colis voyagent avec des voyageurs</p>
+        </div>
+
+        <div class="auth-card">
+          <div class="section-heading">
+            <span class="eyebrow">Bienvenue</span>
+            <h1>Connectez-vous</h1>
+            <p>Retrouvez vos envois et vos trajets en toute simplicité.</p>
+          </div>
+
+          <form class="form-stack" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <label class="field">
+              <span>Email</span>
+              <div class="input-wrap">
+                <input type="email" formControlName="email" placeholder="jean@email.com" autocomplete="email" />
+              </div>
+            </label>
+
+            <label class="field">
+              <span>Mot de passe</span>
+              <div class="input-wrap">
+                <input [type]="showPassword() ? 'text' : 'password'" formControlName="password"
+                  placeholder="Votre mot de passe" autocomplete="current-password" />
+                <button type="button" class="field-action"
+                  [attr.aria-label]="showPassword() ? 'Masquer le mot de passe' : 'Afficher le mot de passe'"
+                  (click)="togglePassword()">
+                  <svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path>
+                    <circle cx="12" cy="12" r="2.5"></circle>
+                  </svg>
+                </button>
+              </div>
+            </label>
+
+            <button type="button" class="text-link align-right" (click)="onForgotPassword()">
+              Mot de passe oublié ?
+            </button>
+
+            <button type="submit" class="btn btn-primary">
+              Se connecter
+              <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6"></path>
+              </svg>
+            </button>
+          </form>
+
+          <div class="separator"><span>ou</span></div>
+
+          <button type="button" class="btn btn-secondary" (click)="onSignUp()">S’inscrire</button>
+        </div>
+
+        <div class="demo">
+          <span>Accès démo</span>
+          <div>
+            <button type="button" (click)="loginAs('expediteur@weightaty.mu')">Expéditeur</button>
+            <button type="button" (click)="loginAs('voyageur@weightaty.mu')">Voyageur</button>
+            <button type="button" (click)="loginAs('admin@weightaty.mu')">Admin</button>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  @if (toastMessage(); as message) {
+  <div class="toast" role="status" aria-live="polite">
+    <svg class="icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+      stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="9"></circle>
+      <path d="m8.5 12.5 2.5 2.5 5-5"></path>
+    </svg>
+    <span>{{ message }}</span>
+  </div>
+  }
+</ion-content>
