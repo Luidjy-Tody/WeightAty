@@ -1,0 +1,21 @@
+<div class="number-field">
+  <ion-input
+    #nativeInput
+    labelPlacement="stacked"
+    fill="outline"
+    type="number"
+    [inputmode]="inputmode()"
+    [label]="label()"
+    [placeholder]="placeholder()"
+    [formControl]="control()"
+    enterkeyhint="next"
+  >
+    @if (unit()) {
+      <span slot="end" class="number-field__unit">{{ unit() }}</span>
+    }
+  </ion-input>
+
+  @if (errorText(); as message) {
+    <p class="field-error" role="alert">{{ message }}</p>
+  }
+</div>

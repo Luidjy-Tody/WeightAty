@@ -1,0 +1,28 @@
+.signaler-content {
+  --background: var(--wat-bg);
+}
+
+.signaler {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 20px 16px calc(28px + env(safe-area-inset-bottom));
+}
+
+.signaler__intro {
+  margin: 0;
+  color: var(--wat-muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.signaler__submit {
+  margin-top: 6px;
+  min-height: 52px;
+  --border-radius: var(--wat-radius-md);
+  --box-shadow: 0 10px 22px rgba(16, 185, 129, 0.28);
+  font-size: 16px;
+  font-weight: 700;
+}

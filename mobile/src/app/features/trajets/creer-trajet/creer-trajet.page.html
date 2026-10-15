@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <button
+        type="button"
+        class="back-button"
+        aria-label="Revenir aux trajets publiés"
+        (click)="goBack()"
+      >
+        <ion-icon name="arrow-back-outline" aria-hidden="true"></ion-icon>
+      </button>
+    </ion-buttons>
+
+    <ion-title>Créer un trajet</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="creer-content">
+  <div class="creer">
+    <app-promo-banner />
+
+    <app-trip-form
+      [loading]="loading()"
+      [serverError]="serverError()"
+      (submitted)="onSubmitted($event)"
+    />
+  </div>
+</ion-content>
+
+<footer class="submit-bar">
+  <div class="submit-bar__inner">
+    <ion-button
+      class="submit-bar__button"
+      expand="block"
+      [disabled]="loading()"
+      (click)="submit()"
+    >
+      @if (loading()) {
+        <ion-spinner slot="start" name="crescent"></ion-spinner>
+      }
+      <span class="submit-bar__label">Publier le trajet</span>
+      <ion-icon slot="end" name="arrow-forward" aria-hidden="true"></ion-icon>
+    </ion-button>
+  </div>
+</footer>

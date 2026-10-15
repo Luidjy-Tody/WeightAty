@@ -1,0 +1,120 @@
+<form class="trip-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+  @if (serverError(); as message) {
+    <p class="trip-form__error" role="alert">{{ message }}</p>
+  }
+
+  <h2 class="section-title">Itinéraire</h2>
+
+  <app-location-input
+    #departField
+    [control]="form.controls.departIata"
+    label="Départ"
+    placeholder="Maurice (MRU)"
+    [excludeIata]="form.controls.arriveeIata.value"
+    [errorText]="messages().departIata"
+  />
+
+  <app-location-input
+    #arriveeField
+    [control]="form.controls.arriveeIata"
+    label="Destination"
+    placeholder="Paris (CDG)"
+    [excludeIata]="form.controls.departIata.value"
+    [errorText]="messages().arriveeIata"
+  />
+
+  <div class="field-row">
+    <app-date-field
+      #dateDepartField
+      [control]="form.controls.dateDepart"
+      label="Date de départ"
+      [min]="today"
+      [errorText]="messages().dateDepart"
+    />
+
+    <app-date-field
+      #dateArriveeField
+      [control]="form.controls.dateArrivee"
+      label="Date d'arrivée"
+      [min]="form.controls.dateDepart.value || today"
+      [errorText]="messages().dateArrivee"
+    />
+  </div>
+
+  <h2 class="section-title">Détails du trajet</h2>
+
+  <div class="field-row">
+    <app-number-field
+      #poidsField
+      [control]="form.controls.poidsDisponibleKg"
+      label="Poids disponible"
+      placeholder="20"
+      unit="kg"
+      [errorText]="messages().poidsDisponibleKg"
+    />
+
+    <app-number-field
+      #prixField
+      [control]="form.controls.prixParKg"
+      label="Prix par kg"
+      placeholder="160"
+      [unit]="currencySymbol"
+      [errorText]="messages().prixParKg"
+    />
+  </div>
+
+  <ion-input
+    #compagnieInput
+    class="wat-label-bold"
+    [class.field--invalid]="messages().compagnieAerienne !== null"
+    label="Compagnie aérienne"
+    labelPlacement="stacked"
+    fill="outline"
+    placeholder="Air Mauritius"
+    autocomplete="off"
+    enterkeyhint="next"
+    formControlName="compagnieAerienne"
+  ></ion-input>
+  @if (messages().compagnieAerienne; as message) {
+    <p class="field-error" role="alert">{{ message }}</p>
+  }
+
+  <ion-input
+    #numeroVolInput
+    class="wat-label-bold trip-form__flight"
+    [class.field--invalid]="messages().numeroVol !== null"
+    label="Numéro de vol"
+    labelPlacement="stacked"
+    fill="outline"
+    placeholder="MK 014"
+    autocomplete="off"
+    autocapitalize="characters"
+    enterkeyhint="next"
+    formControlName="numeroVol"
+    (ionBlur)="normalizeFlight()"
+  ></ion-input>
+  @if (messages().numeroVol; as message) {
+    <p class="field-error" role="alert">{{ message }}</p>
+  }
+
+  <ion-textarea
+    #notesInput
+    class="wat-label-bold"
+    [class.field--invalid]="messages().informationsSupplementaires !== null"
+    label="Informations supplémentaires"
+    labelPlacement="stacked"
+    fill="outline"
+    placeholder="Types de colis acceptés, modalités..."
+    [autoGrow]="true"
+    [maxlength]="limits.notesMaxLength"
+    [counter]="true"
+    [attr.rows]="3"
+    formControlName="informationsSupplementaires"
+  ></ion-textarea>
+  @if (messages().informationsSupplementaires; as message) {
+    <p class="field-error" role="alert">{{ message }}</p>
+  }
+
+  <!-- Bouton masqué : permet la soumission au clavier (touche Entrée / OK). -->
+  <button type="submit" class="trip-form__hidden-submit" tabindex="-1" aria-hidden="true"></button>
+</form>

@@ -1,0 +1,67 @@
+ion-header {
+  border-bottom: 1px solid var(--wat-border);
+}
+
+.notifications-content {
+  --background: var(--wat-bg);
+  --padding-bottom: calc(28px + env(safe-area-inset-bottom));
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 18px 16px 8px;
+}
+
+.page__intro {
+  margin: 0;
+  color: var(--wat-muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.page__note {
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--wat-border);
+  border-radius: var(--wat-radius-md);
+  background: var(--wat-emerald-50);
+  color: var(--wat-green-800);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.toggle-card {
+  overflow: hidden;
+}
+
+.skeleton__card {
+  display: block;
+  height: 200px;
+  margin: 0;
+  border-radius: var(--wat-radius-lg);
+  --background: #e6ebe8;
+}
+
+.state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 72px 32px;
+  text-align: center;
+}
+
+.state__icon {
+  color: var(--wat-muted);
+  font-size: 46px;
+}
+
+.state__message {
+  margin: 0;
+  color: var(--wat-muted);
+  font-size: 15px;
+}

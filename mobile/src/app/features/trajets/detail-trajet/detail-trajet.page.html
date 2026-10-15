@@ -1,0 +1,112 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <app-round-icon-button icon="chevron-back" label="Retour" (clicked)="goBack()" />
+    </ion-buttons>
+
+    <ion-title>Détails du trajet</ion-title>
+
+    <ion-buttons slot="end">
+      <app-round-icon-button
+        icon="ellipsis-horizontal"
+        label="Options du trajet"
+        (clicked)="openMenu()"
+      />
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="detail-content">
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
+    <ion-refresher-content
+      pullingText="Tirer pour actualiser"
+      refreshingSpinner="crescent"
+      refreshingText="Actualisation…"
+    ></ion-refresher-content>
+  </ion-refresher>
+
+  @if (loading()) {
+    <div class="loader" role="status" aria-live="polite">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Chargement du trajet…</p>
+    </div>
+  } @else if (error()) {
+    <div class="state">
+      <ion-icon class="state__icon" name="alert-circle-outline" aria-hidden="true"></ion-icon>
+      <p class="state__message">{{ errorMessage() }}</p>
+      <ion-button fill="solid" (click)="retry()">Réessayer</ion-button>
+    </div>
+  } @else if (trajet(); as detail) {
+    <div class="detail">
+      @if (detail.estProprietaire) {
+        <section class="card card--owner">
+          <span class="owner__label">Votre trajet</span>
+          <app-status-badge [label]="badge().label" [tone]="badge().tone" />
+        </section>
+      } @else {
+        <section class="card">
+          <app-traveler-header [traveler]="detail.voyageur" />
+        </section>
+      }
+
+      <app-trip-summary-card [trajet]="detail" />
+
+      @if (!detail.estProprietaire && aboutText()) {
+        <section class="about">
+          <h2 class="section-title">À propos du voyageur</h2>
+          <p class="about__text">{{ aboutText() }}</p>
+          <a class="about__link" [routerLink]="['/avis', detail.voyageur.id]">Voir les avis →</a>
+        </section>
+      }
+
+      <section class="policy">
+        <h2 class="section-title">Informations importantes</h2>
+        <ul class="policy__list">
+          @for (item of policyItems; track item) {
+            <li class="policy__item">
+              <ion-icon name="checkmark-circle" aria-hidden="true"></ion-icon>
+              {{ item }}
+            </li>
+          }
+        </ul>
+      </section>
+
+      <a class="report" [routerLink]="['/signaler', 'trajet', detail.id]">Signaler un problème</a>
+    </div>
+  }
+</ion-content>
+
+<footer class="action-bar">
+  @if (trajet(); as detail) {
+    @if (detail.estProprietaire) {
+      <div class="action-bar__status">
+        <span class="action-bar__label">Statut du trajet</span>
+        <app-status-badge [label]="badge().label" [tone]="badge().tone" />
+      </div>
+    } @else {
+      <div class="action-bar__inner">
+        <ion-button
+          class="action-bar__secondary"
+          fill="outline"
+          [disabled]="contacting()"
+          (click)="contact()"
+        >
+          @if (contacting()) {
+            <ion-spinner slot="start" name="crescent"></ion-spinner>
+          } @else {
+            <ion-icon slot="start" name="chatbubble-ellipses-outline" aria-hidden="true"></ion-icon>
+          }
+          Contacter
+        </ion-button>
+
+        <ion-button
+          class="action-bar__primary"
+          [disabled]="!detail.peutFaireDemande"
+          (click)="requestTrip()"
+        >
+          {{ requestLabel() }}
+        </ion-button>
+      </div>
+    }
+  }
+</footer>

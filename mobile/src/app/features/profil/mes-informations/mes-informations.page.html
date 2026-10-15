@@ -1,0 +1,97 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <app-round-icon-button
+        icon="chevron-back"
+        label="Revenir à mon profil"
+        (clicked)="goBack()"
+      />
+    </ion-buttons>
+
+    <ion-title>Mes informations</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="infos-content">
+  @if (loading()) {
+    <div class="loader" role="status" aria-live="polite">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Chargement de vos informations…</p>
+    </div>
+  } @else if (loadError()) {
+    <div class="state">
+      <p class="state__message">{{ loadErrorMessage() }}</p>
+      <ion-button fill="solid" (click)="retry()">Réessayer</ion-button>
+    </div>
+  } @else {
+    <div class="infos">
+      <app-profile-header-card
+        [fullName]="fullName()"
+        [photoUrl]="displayedPhoto()"
+        [hasPhoto]="hasPhoto()"
+        [busy]="photoBusy()"
+        (photoRequested)="onPhotoRequested()"
+        (photoRemovalRequested)="removePhoto()"
+      />
+
+      <form class="infos__form" [formGroup]="form" (ngSubmit)="save()" novalidate>
+        <app-form-field
+          #fullNameField
+          [control]="form.controls.fullName"
+          label="Nom complet"
+          placeholder="Jean Dupont"
+          autocomplete="name"
+          [errorText]="messages().fullName"
+        />
+
+        <app-form-field
+          #emailField
+          [control]="form.controls.email"
+          label="Email"
+          placeholder="jean@email.com"
+          type="email"
+          inputmode="email"
+          autocomplete="email"
+          [errorText]="messages().email"
+        />
+
+        <app-form-field
+          #phoneField
+          [control]="form.controls.phone"
+          label="Téléphone"
+          placeholder="+230 5 123 4567"
+          type="tel"
+          inputmode="tel"
+          autocomplete="tel"
+          [errorText]="messages().phone"
+        />
+
+        <app-form-field
+          #addressField
+          [control]="form.controls.address"
+          label="Adresse"
+          placeholder="Curepipe, Maurice"
+          autocomplete="street-address"
+          enterkeyhint="done"
+          [errorText]="messages().address"
+        />
+
+        <ion-button class="infos__submit" type="submit" expand="block" [disabled]="!canSave()">
+          @if (saving()) {
+            <ion-spinner slot="start" name="crescent"></ion-spinner>
+          }
+          Enregistrer les modifications
+        </ion-button>
+      </form>
+    </div>
+  }
+</ion-content>
+
+<!-- Sélecteur d'image natif (galerie ou appareil photo), masqué visuellement. -->
+<input
+  #photoInput
+  type="file"
+  accept="image/jpeg,image/png"
+  class="visually-hidden"
+  (change)="onPhotoSelected($event)"
+/>

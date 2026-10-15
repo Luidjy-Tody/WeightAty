@@ -1,0 +1,28 @@
+<article class="trajet">
+  <header class="trajet__header">
+    <app-route-line [origine]="trajet().villeDepart" [destination]="trajet().villeArrivee" />
+    <app-status-badge [label]="badge().label" [tone]="badge().tone" />
+  </header>
+
+  <p class="trajet__dates">{{ dateLabel() }}</p>
+
+  <div class="trajet__meta">
+    <span class="trajet__chip">{{ weightLabel() }}</span>
+    @if (priceLabel(); as price) {
+      <span class="trajet__chip">{{ price }}</span>
+    }
+  </div>
+
+  @if (flightLabel()) {
+    <p class="trajet__flight">{{ flightLabel() }}</p>
+  }
+
+  <ion-button
+    class="trajet__action"
+    expand="block"
+    fill="outline"
+    [routerLink]="['/trajets', trajet().id]"
+  >
+    Voir le trajet
+  </ion-button>
+</article>

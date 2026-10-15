@@ -1,0 +1,53 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <app-round-icon-button icon="chevron-back" label="Retour" (clicked)="goBack()" />
+    </ion-buttons>
+    <ion-title>Livraison terminée</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="livraison-content">
+  @if (loading()) {
+    <div class="loader" role="status" aria-live="polite">
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+  } @else if (error()) {
+    <div class="state">
+      <ion-icon class="state__icon" name="alert-circle-outline" aria-hidden="true"></ion-icon>
+      <p class="state__message">{{ errorMessage() }}</p>
+      <ion-button fill="solid" (click)="load()">Réessayer</ion-button>
+    </div>
+  } @else if (colis(); as detail) {
+    <app-result-screen icon="cube" title="Livraison terminée" [message]="message()">
+      <article class="delivery-card">
+        <div class="delivery-card__top">
+          <app-status-badge label="Livré" tone="neutral" />
+          <span class="delivery-card__ref">{{ detail.reference }}</span>
+        </div>
+        <p class="delivery-card__amount">{{ montantLabel() }} libérés</p>
+      </article>
+
+      @if (detail.evaluation) {
+        <article class="evaluation-card">
+          <p class="evaluation-card__title">Votre évaluation</p>
+          <app-rating-stars [value]="detail.evaluation.note" size="sm" />
+          @if (detail.evaluation.commentaire) {
+            <p class="evaluation-card__comment">« {{ detail.evaluation.commentaire }} »</p>
+          }
+        </article>
+      } @else if (detail.peutEvaluer) {
+        <ion-button class="result-action" expand="block" (click)="evaluate()">
+          <ion-icon slot="start" name="star" aria-hidden="true"></ion-icon>
+          Évaluer le voyageur
+        </ion-button>
+      }
+
+      @if (estVoyageur()) {
+        <a class="result-link" [routerLink]="['/colis', detail.id, 'remuneration']">
+          Voir la rémunération
+        </a>
+      }
+    </app-result-screen>
+  }
+</ion-content>

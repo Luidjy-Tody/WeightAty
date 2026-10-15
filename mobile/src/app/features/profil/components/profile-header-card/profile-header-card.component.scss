@@ -1,0 +1,61 @@
+.identity {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: var(--wat-surface);
+  border: 1px solid var(--wat-border);
+  border-radius: var(--wat-radius-lg);
+  box-shadow: var(--wat-shadow-card);
+}
+
+.identity__info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.identity__name {
+  margin: 0;
+  color: var(--wat-ink);
+  font-size: 18px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.identity__actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.identity__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--wat-green-700);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.identity__link--danger {
+  color: var(--wat-danger);
+}
+
+.identity__link:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.identity__link ion-spinner {
+  width: 16px;
+  height: 16px;
+}

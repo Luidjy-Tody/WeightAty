@@ -1,0 +1,16 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.number-field {
+  min-width: 0;
+}
+
+.number-field__unit {
+  padding-inline-start: 4px;
+  color: var(--wat-muted);
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}

@@ -1,0 +1,29 @@
+<section class="hero">
+  <app-avatar
+    [firstName]="user().firstName"
+    [lastName]="user().lastName"
+    [photoUrl]="user().photoUrl"
+    size="lg"
+  />
+
+  <h1 class="hero__name">{{ fullName() }}</h1>
+
+  @if (stats().avis > 0) {
+    <div class="hero__rating">
+      <ion-icon name="star" aria-hidden="true"></ion-icon>
+      <span class="hero__score">{{ noteLabel() }}</span>
+      <a class="hero__reviews" [routerLink]="['/profil/avis']">
+        {{ stats().avis }} avis
+      </a>
+    </div>
+  } @else {
+    <p class="hero__rating hero__rating--empty">Aucun avis pour le moment</p>
+  }
+
+  @if (user().isVerified) {
+    <span class="hero__badge">
+      <ion-icon name="checkmark-circle" aria-hidden="true"></ion-icon>
+      Profil vérifié
+    </span>
+  }
+</section>

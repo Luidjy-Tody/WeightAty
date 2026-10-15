@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <app-round-icon-button icon="chevron-back" label="Revenir aux paramètres" (clicked)="goBack()" />
+    </ion-buttons>
+    <ion-title>Langue</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="langue-content">
+  @if (loading()) {
+    <div class="page">
+      <ion-skeleton-text [animated]="true" class="skeleton__card"></ion-skeleton-text>
+    </div>
+  } @else if (error()) {
+    <div class="state">
+      <ion-icon class="state__icon" name="alert-circle-outline" aria-hidden="true"></ion-icon>
+      <p class="state__message">{{ errorMessage() }}</p>
+      <ion-button fill="solid" (click)="retry()">Réessayer</ion-button>
+    </div>
+  } @else {
+    <div class="page">
+      <div class="wat-card language-card">
+        @for (language of languages; track language.code) {
+          <button
+            type="button"
+            class="language-row"
+            [attr.aria-pressed]="current() === language.code"
+            (click)="select(language.code)"
+          >
+            <span class="language-row__label">{{ language.label }}</span>
+            @if (current() === language.code) {
+              <ion-icon class="language-row__check" name="checkmark-circle" aria-hidden="true"></ion-icon>
+            }
+          </button>
+        }
+      </div>
+
+      <p class="page__note">
+        L'interface est actuellement disponible en français uniquement. Les autres
+        langues seront proposées dès que leurs traductions seront prêtes.
+      </p>
+    </div>
+  }
+</ion-content>

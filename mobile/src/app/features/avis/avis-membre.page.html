@@ -1,0 +1,37 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/profil" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-title>Avis</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="avis-content">
+  @if (loading()) {
+    <div class="loader" role="status" aria-live="polite">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Chargement des avis…</p>
+    </div>
+  } @else if (error()) {
+    <div class="state">
+      <ion-icon class="state__icon" name="alert-circle-outline" aria-hidden="true"></ion-icon>
+      <p class="state__message">{{ errorMessage() }}</p>
+      <ion-button fill="solid" (click)="retry()">Réessayer</ion-button>
+    </div>
+  } @else if (avis().length > 0) {
+    <div class="list">
+      @for (review of avis(); track review.id) {
+        <app-review-card [review]="review" />
+      }
+    </div>
+
+    @if (hasMore()) {
+      <ion-button class="list__more" fill="clear" [disabled]="loadingMore()" (click)="loadMore()">
+        Afficher plus d'avis
+      </ion-button>
+    }
+  } @else {
+    <p class="empty">Aucun avis pour le moment.</p>
+  }
+</ion-content>

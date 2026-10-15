@@ -1,0 +1,51 @@
+.trip-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.trip-form__error {
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid #fecaca;
+  border-radius: var(--wat-radius-sm);
+  background: #fef2f2;
+  color: var(--wat-danger);
+  font-size: 14px;
+}
+
+/* Titres de section : plus grands, en graisse légère. */
+.section-title {
+  margin: 8px 0 -6px;
+  color: var(--wat-ink);
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+/* Deux champs côte à côte, empilés sur écran étroit. */
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 360px) {
+  .field-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.trip-form__flight {
+  text-transform: uppercase;
+}
+
+.trip-form__hidden-submit {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  pointer-events: none;
+}

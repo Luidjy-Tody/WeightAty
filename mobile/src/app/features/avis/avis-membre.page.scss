@@ -1,0 +1,41 @@
+.avis-content {
+  --background: var(--wat-bg);
+  --padding-bottom: calc(24px + env(safe-area-inset-bottom));
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 20px 16px 8px;
+}
+
+.list__more {
+  display: block;
+  margin: 8px auto 0;
+  font-size: 14px;
+}
+
+.loader,
+.state,
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 72px 32px;
+  text-align: center;
+  color: var(--wat-muted);
+  font-size: 15px;
+}
+
+.state__icon {
+  font-size: 44px;
+}
+
+.state__message,
+.empty {
+  margin: 0;
+}

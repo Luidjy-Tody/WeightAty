@@ -1,0 +1,67 @@
+:host {
+  display: block;
+}
+
+.demo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 26px;
+}
+
+.demo__title {
+  margin: 0;
+  color: var(--wat-muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.demo__chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.demo__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 10px 18px;
+  border: 1px solid var(--wat-emerald-100);
+  border-radius: 999px;
+  background: var(--wat-emerald-50);
+  color: var(--wat-green-800);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.demo__chip:disabled {
+  opacity: 0.6;
+}
+
+.demo__chip:active:not(:disabled) {
+  background: var(--wat-emerald-100);
+}
+
+.demo__chip ion-spinner {
+  width: 16px;
+  height: 16px;
+}
+
+/* Téléphones étroits : les trois puces tiennent sur une seule ligne. */
+@media (max-width: 380px) {
+  .demo__chips {
+    gap: 8px;
+  }
+
+  .demo__chip {
+    padding: 9px 14px;
+    font-size: 13px;
+  }
+}

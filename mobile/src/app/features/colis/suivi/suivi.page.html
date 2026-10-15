@@ -1,0 +1,109 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <app-round-icon-button icon="chevron-back" label="Retour" (clicked)="goBack()" />
+    </ion-buttons>
+
+    <ion-title>Suivi du colis</ion-title>
+
+    <ion-buttons slot="end">
+      <app-round-icon-button
+        icon="ellipsis-horizontal"
+        label="Options du colis"
+        (clicked)="openMenu()"
+      />
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="suivi-content">
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
+    <ion-refresher-content
+      pullingText="Tirer pour actualiser"
+      refreshingSpinner="crescent"
+      refreshingText="Actualisation…"
+    ></ion-refresher-content>
+  </ion-refresher>
+
+  @if (loading()) {
+    <div class="loader" role="status" aria-live="polite">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Chargement du suivi…</p>
+    </div>
+  } @else if (error()) {
+    <div class="state">
+      <ion-icon class="state__icon" name="alert-circle-outline" aria-hidden="true"></ion-icon>
+      <p class="state__message">{{ errorMessage() }}</p>
+      <ion-button fill="solid" (click)="retry()">Réessayer</ion-button>
+    </div>
+  } @else if (colis(); as detail) {
+    <div class="suivi">
+      <section class="tracking-header">
+        <span class="tracking-header__decor" aria-hidden="true"></span>
+
+        <app-route-line
+          [origine]="detail.villeOrigine ?? 'Origine à définir'"
+          [destination]="detail.villeDestination ?? 'Destination à définir'"
+          variant="stacked"
+        />
+
+        <p class="tracking-header__ref">N° {{ detail.reference }}</p>
+      </section>
+
+      <div class="status">
+        <app-status-badge [label]="badge().label" [tone]="badge().tone" />
+        @if (arrivalLabel()) {
+          <p class="status__arrival">{{ arrivalLabel() }}</p>
+        }
+      </div>
+
+      <section class="card">
+        <app-tracking-timeline
+          [etapes]="detail.etapes"
+          [statut]="detail.statut"
+          [dateArriveePrevue]="detail.dateArriveePrevue"
+        />
+      </section>
+
+      @if (detail.voyageur) {
+        <app-traveler-card [traveler]="detail.voyageur" (contact)="contact()" />
+
+        <ion-button class="suivi__contact" expand="block" fill="outline" (click)="contact()">
+          <ion-icon slot="start" name="chatbubble-ellipses-outline" aria-hidden="true"></ion-icon>
+          Contacter le voyageur
+        </ion-button>
+      }
+
+      @if (!isDelivered()) {
+        <p class="suivi__note">
+          <ion-icon name="shield-checkmark-outline" aria-hidden="true"></ion-icon>
+          L'évaluation sera disponible après la livraison.
+        </p>
+      }
+    </div>
+  }
+</ion-content>
+
+@if (showActionBar()) {
+  <footer class="action-bar">
+    <div class="action-bar__inner">
+      @if (isDelivered()) {
+        <ion-button class="action-bar__primary" expand="block" (click)="openDelivery()">
+          Voir la livraison
+        </ion-button>
+      } @else {
+        <ion-button
+          class="action-bar__primary"
+          expand="block"
+          [disabled]="confirming()"
+          (click)="confirmDelivery()"
+        >
+          @if (confirming()) {
+            <ion-spinner slot="start" name="crescent"></ion-spinner>
+          }
+          Confirmer la réception
+        </ion-button>
+      }
+    </div>
+  </footer>
+}

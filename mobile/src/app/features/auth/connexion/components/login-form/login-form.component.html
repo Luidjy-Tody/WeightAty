@@ -1,0 +1,47 @@
+<form class="login-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+  @if (serverError(); as message) {
+    <p class="login-form__error" role="alert">{{ message }}</p>
+  }
+
+  <ion-input
+    class="wat-label-bold ion-touched"
+    label="Email"
+    labelPlacement="stacked"
+    fill="outline"
+    type="email"
+    inputmode="email"
+    placeholder="jean@email.com"
+    autocomplete="email"
+    autocapitalize="off"
+    spellcheck="false"
+    enterkeyhint="next"
+    formControlName="email"
+    [class.ion-invalid]="messages().email !== null"
+    [errorText]="messages().email ?? undefined"
+    (keydown.enter)="focusPassword($event)"
+  ></ion-input>
+
+  <app-password-field
+    [control]="form.controls.password"
+    label="Mot de passe"
+    placeholder="Votre mot de passe"
+    autocomplete="current-password"
+    [errorText]="messages().password"
+  />
+
+  <a class="login-form__forgot" routerLink="/auth/mot-de-passe-oublie">Mot de passe oublié ?</a>
+
+  <ion-button
+    class="login-form__submit"
+    type="submit"
+    expand="block"
+    [disabled]="loading()"
+    aria-label="Se connecter"
+  >
+    @if (loading()) {
+      <ion-spinner slot="start" name="crescent"></ion-spinner>
+    }
+    <span class="login-form__submit-label">Se connecter</span>
+    <ion-icon slot="end" name="arrow-forward" aria-hidden="true"></ion-icon>
+  </ion-button>
+</form>

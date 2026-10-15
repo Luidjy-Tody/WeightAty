@@ -1,0 +1,78 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <span class="brand" aria-hidden="true">
+        <ion-icon name="paper-plane"></ion-icon>
+      </span>
+    </ion-buttons>
+    <ion-title>Mon profil</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="profil-content">
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
+    <ion-refresher-content
+      pullingText="Tirer pour actualiser"
+      refreshingSpinner="crescent"
+      refreshingText="Actualisation…"
+    ></ion-refresher-content>
+  </ion-refresher>
+
+  @if (loading()) {
+    <div class="skeleton">
+      <div class="skeleton__hero">
+        <ion-skeleton-text [animated]="true" class="skeleton__avatar"></ion-skeleton-text>
+        <ion-skeleton-text [animated]="true" class="skeleton__line"></ion-skeleton-text>
+        <ion-skeleton-text [animated]="true" class="skeleton__line skeleton__line--short"></ion-skeleton-text>
+      </div>
+      <ion-skeleton-text [animated]="true" class="skeleton__card"></ion-skeleton-text>
+      <ion-skeleton-text [animated]="true" class="skeleton__block"></ion-skeleton-text>
+    </div>
+  } @else if (error()) {
+    <div class="state">
+      <ion-icon class="state__icon" name="alert-circle-outline" aria-hidden="true"></ion-icon>
+      <p class="state__message">{{ errorMessage() }}</p>
+      <ion-button fill="solid" (click)="retry()">Réessayer</ion-button>
+    </div>
+  } @else if (profile(); as profil) {
+    <app-profil-header [user]="profil" [stats]="profil.stats" />
+
+    <main class="profil-body">
+      <app-stats-card [stats]="profil.stats" />
+
+      <app-menu-list>
+        @for (entry of menu(); track entry.link) {
+          <app-menu-item
+            [icon]="entry.icon"
+            [title]="entry.title"
+            [subtitle]="entry.subtitle"
+            [link]="entry.link"
+          />
+        }
+      </app-menu-list>
+
+      <section class="reviews" aria-labelledby="reviews-title">
+        <header class="reviews__header">
+          <h2 id="reviews-title" class="reviews__title">Mes évaluations</h2>
+          @if (profil.stats.avis > 0) {
+            <a class="reviews__link" [routerLink]="['/profil/avis']">Voir tout</a>
+          }
+        </header>
+
+        @if (profil.derniersAvis.length > 0) {
+          <div class="reviews__list">
+            @for (review of profil.derniersAvis; track review.id) {
+              <app-review-card [review]="review" />
+            }
+          </div>
+        } @else {
+          <p class="reviews__empty">Vous n'avez pas encore reçu d'évaluation.</p>
+        }
+      </section>
+
+      <button type="button" class="logout" (click)="confirmLogout()">Déconnexion</button>
+    </main>
+  }
+</ion-content>
+
+<app-bottom-nav />

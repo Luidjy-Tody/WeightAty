@@ -1,0 +1,39 @@
+<section class="identity">
+  <app-avatar
+    [firstName]="initials().firstName"
+    [lastName]="initials().lastName"
+    [photoUrl]="photoUrl()"
+    size="lg"
+  />
+
+  <div class="identity__info">
+    <p class="identity__name">{{ fullName() || 'Votre nom complet' }}</p>
+
+    <div class="identity__actions">
+      <button
+        type="button"
+        class="identity__link"
+        [disabled]="busy()"
+        aria-label="Modifier la photo de profil"
+        (click)="photoRequested.emit()"
+      >
+        @if (busy()) {
+          <ion-spinner name="crescent"></ion-spinner>
+        }
+        Modifier la photo
+      </button>
+
+      @if (hasPhoto()) {
+        <button
+          type="button"
+          class="identity__link identity__link--danger"
+          [disabled]="busy()"
+          aria-label="Supprimer la photo de profil"
+          (click)="photoRemovalRequested.emit()"
+        >
+          Supprimer
+        </button>
+      }
+    </div>
+  </div>
+</section>

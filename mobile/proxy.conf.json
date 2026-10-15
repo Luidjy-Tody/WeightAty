@@ -1,0 +1,10 @@
+{
+  "//": "Proxy de développement : les appels du frontend vers /api sont redirigés vers l'API Express.",
+  "//2": "Ainsi l'app fonctionne depuis le PC ET depuis un téléphone en utilisant la même adresse (celle du serveur de dev).",
+  "/api": {
+    "target": "http://localhost:3000",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "warn"
+  }
+}

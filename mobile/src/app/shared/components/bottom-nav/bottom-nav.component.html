@@ -1,0 +1,13 @@
+<nav class="bottom-nav" aria-label="Navigation principale">
+  @for (item of items; track item.link) {
+    <a
+      class="nav-item"
+      [routerLink]="item.link"
+      routerLinkActive="is-active"
+    >
+      <span class="nav-indicator" aria-hidden="true"></span>
+      <ion-icon [name]="item.icon" aria-hidden="true"></ion-icon>
+      <span class="nav-label">{{ item.label }}</span>
+    </a>
+  }
+</nav>

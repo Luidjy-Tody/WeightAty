@@ -1,0 +1,59 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.location__field {
+  position: relative;
+}
+
+.location__results {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 4px);
+  right: 0;
+  left: 0;
+  max-height: 240px;
+  margin: 0;
+  padding: 6px;
+  overflow-y: auto;
+  list-style: none;
+  background: var(--wat-surface);
+  border: 1px solid var(--wat-border);
+  border-radius: var(--wat-radius-md);
+  box-shadow: 0 14px 30px rgba(11, 61, 44, 0.16);
+}
+
+.location__option {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  min-height: 48px;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.location__option:active:not(:disabled) {
+  background: var(--wat-emerald-50);
+}
+
+.location__option:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.location__option-label {
+  color: var(--wat-ink);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.location__option-meta {
+  color: var(--wat-muted);
+  font-size: 12px;
+}

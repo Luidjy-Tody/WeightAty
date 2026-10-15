@@ -1,0 +1,68 @@
+:host {
+  display: block;
+}
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 20px 52px;
+  background: linear-gradient(180deg, var(--wat-green-900), var(--wat-green-950));
+  color: #ffffff;
+  text-align: center;
+}
+
+.hero__name {
+  margin: 4px 0 0;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.hero__rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 15px;
+}
+
+.hero__rating ion-icon {
+  color: #fbbf24;
+  font-size: 18px;
+}
+
+.hero__rating--empty {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 14px;
+}
+
+.hero__score {
+  font-weight: 700;
+}
+
+.hero__reviews {
+  color: #ffffff;
+  font-size: 14px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.hero__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(16, 185, 129, 0.22);
+  border: 1px solid rgba(52, 211, 153, 0.55);
+  color: var(--wat-emerald-100);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.hero__badge ion-icon {
+  font-size: 15px;
+}

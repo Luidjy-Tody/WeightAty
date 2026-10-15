@@ -28,10 +28,74 @@
 /**
  * Ionic Dark Mode
  * -----------------------------------------------------
- * For more info, please see:
+ * L'interface Weight'Aty est conçue en thème clair : la palette sombre
+ * automatique est donc désactivée.
  * https://ionicframework.com/docs/theming/dark-mode
  */
 
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
+/* @import '@ionic/angular/css/palettes/dark.system.css'; */
+
+/* ---------------------------------------------------------------------------
+ * Styles partagés Weight'Aty
+ * ------------------------------------------------------------------------ */
+:root {
+  color-scheme: light;
+}
+
+ion-toolbar {
+  --background: var(--wat-surface);
+  --color: var(--wat-ink);
+}
+
+/* Réserve la zone de sécurité (encoche / barre d'état) au-dessus de l'en-tête. */
+ion-header {
+  background: var(--wat-surface);
+  padding-top: env(safe-area-inset-top);
+}
+
+.wat-card {
+  background: var(--wat-surface);
+  border: 1px solid var(--wat-border);
+  border-radius: var(--wat-radius-lg);
+  box-shadow: var(--wat-shadow-card);
+}
+
+/* Libellés de champs en gras (le label est rendu par IonInput hors du
+   shadow DOM du composant, d'où cette règle globale). */
+ion-input.wat-label-bold .label-text,
+ion-input.wat-label-bold ion-label {
+  color: var(--wat-ink);
+  font-weight: 600;
+}
+
+/* Message d'erreur affiché sous un champ de formulaire. */
+.field-error {
+  margin: 6px 2px 0;
+  color: var(--wat-danger);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+/* Apparence par défaut des champs de formulaire (fond blanc, coins arrondis). */
+ion-input,
+ion-textarea {
+  --background: var(--wat-surface);
+  --border-radius: var(--wat-radius-md);
+  --padding-start: 14px;
+  --padding-end: 14px;
+  --padding-top: 12px;
+  --padding-bottom: 12px;
+  font-size: 15px;
+}
+
+/* Bordure rouge des champs en erreur. Les composants Ionic définissent
+   `--border-color` via `:host(.input-fill-outline)` : il faut un sélecteur
+   plus spécifique pour la surcharger. */
+.field--invalid ion-input.input-fill-outline,
+.field--invalid ion-textarea.textarea-fill-outline,
+ion-input.input-fill-outline.field--invalid,
+ion-textarea.textarea-fill-outline.field--invalid {
+  --border-color: var(--wat-danger);
+}
