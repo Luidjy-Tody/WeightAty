@@ -1,0 +1,13 @@
+{
+  "name": "weight-aty-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Frontend HTML CSS JavaScript de démonstration, sans backend",
+  "scripts": {
+    "test": "node --test tests/frontend.test.cjs",
+    "test:browser": "node tests/playwright.cjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.56.0"
+  }
+}

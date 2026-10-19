@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#087c63">
+    <meta name="description" content="Weight’Aty — Démonstration frontend de transport de colis.">
+    <title>Notifications — Weight’Aty</title>
+    <link rel="icon" href="../assets/icons/logo.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/pages.css">
+    <script src="../js/app.js" defer></script>
+    <script src="../js/validation.js" defer></script>
+    <script src="../js/mock/data.js" defer></script>
+    <script src="../js/services/demo.js" defer></script>
+    <script src="../js/notifications.js" defer></script>
+  </head>
+  <body data-page="notifications">
+    <!-- LIEN VERS LE CONTENU -->
+    <a class="skip-link" href="#main">Aller au contenu</a>
+    <!-- BARRE DE NAVIGATION -->
+    <div id="header">
+      <header class="site-header">
+        <div class="container header-inner">
+          <a href="../index.html" class="brand">
+            <img src="../assets/icons/logo.svg" alt="">
+            <span>Weight<em>’Aty</em>
+            </span>
+          </a>
+          <button class="icon-button menu-toggle" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="main-nav">
+            <img src="../assets/icons/icone-460999eb13.svg" alt="" aria-hidden="true" class="icon">
+          </button>
+          <nav id="main-nav" class="main-nav" aria-label="Navigation principale">
+            <a href="../index.html">Accueil</a>
+            <a href="recherche.html">Rechercher un trajet</a>
+            <a href="publier-trajet.html">Publier un trajet</a>
+            <a href="mes-demandes.html">Mes demandes</a>
+            <a href="mes-trajets.html">Mes trajets</a>
+          </nav>
+          <div class="account-nav">
+            <a class="icon-button" href="notifications.html" aria-label="2 notifications non lues">
+              <img src="../assets/icons/icone-dbf88ee5d6.svg" alt="" aria-hidden="true" class="icon">
+              <span class="badge-count">2</span>
+            </a>
+            <a href="profil.html" aria-label="Profil de démonstration de Marie">
+              <span class="avatar" aria-hidden="true">MN</span>
+            </a>
+            <span class="demo-label">Profil démo</span>
+          </div>
+        </div>
+      </header>
+    </div>
+    <!-- CONTENU DE LA PAGE -->
+    <main id="main" tabindex="-1">
+      <section id="page-error" hidden="" class="container page">
+        <h2>Informations indisponibles</h2>
+        <p data-error-message="">Cet élément n’est pas disponible.</p>
+        <a href="recherche.html" class="btn">Rechercher un trajet</a>
+      </section>
+      <div id="page-content">
+        <div class="container page">
+          <div class="page-heading between">
+            <div>
+              <p class="eyebrow">Centre d’activité</p>
+              <h1>Notifications</h1>
+              <p>Les actualités de vos envois et de vos trajets.</p>
+            </div>
+            <button id="read-all" class="btn secondary">Tout marquer comme lu</button>
+          </div>
+          <div class="card" style="padding:0" id="notification-list">
+            <a class="notification" href="demandes-recues.html">
+              <img src="../assets/icons/icone-dbf88ee5d6.svg" alt="" aria-hidden="true" class="icon">
+              <div>
+                <strong>Nouvelle demande reçue de Nadia B.</strong>
+                <p>18 octobre 2026 · Non lue</p>
+              </div>
+              <img src="../assets/icons/icone-8853a6ca31.svg" alt="" aria-hidden="true" class="icon">
+            </a>
+            <a class="notification" href="demande-details.html?id=DEM-204">
+              <img src="../assets/icons/icone-dbf88ee5d6.svg" alt="" aria-hidden="true" class="icon">
+              <div>
+                <strong>Votre demande DEM-204 a été acceptée.</strong>
+                <p>17 octobre 2026 · Non lue</p>
+              </div>
+              <img src="../assets/icons/icone-8853a6ca31.svg" alt="" aria-hidden="true" class="icon">
+            </a>
+          </div>
+        </div>
+        <p id="list-empty" hidden="">Aucune notification.</p>
+      </div>
+      <template id="notification-template">
+        <a class="notification" href="demandes-recues.html">
+          <img src="../assets/icons/icone-dbf88ee5d6.svg" alt="" aria-hidden="true" class="icon">
+          <div>
+            <strong>Nouvelle demande reçue de Nadia B.</strong>
+            <p>18 octobre 2026 · Non lue</p>
+          </div>
+          <img src="../assets/icons/icone-8853a6ca31.svg" alt="" aria-hidden="true" class="icon">
+        </a>
+      </template>
+    </main>
+    <!-- PIED DE PAGE -->
+    <div id="footer">
+      <footer class="site-footer">
+        <div class="container">
+          <div class="footer-grid">
+            <div>
+              <a href="../index.html" class="brand">
+                <img src="../assets/icons/logo.svg" alt="">
+                <span>Weight<em>’Aty</em>
+                </span>
+              </a>
+              <p>Le colis voyage autrement. Une plateforme de confiance qui connecte voyageurs et expéditeurs.</p>
+              <small>Démonstration locale · Aucune transaction réelle</small>
+            </div>
+            <div class="footer-column">
+              <strong>Weight’Aty</strong>
+              <a href="a-propos.html" class="">À propos</a>
+              <a href="contact.html" class="">Contact</a>
+              <a href="recherche.html" class="">Trouver un trajet</a>
+              <a href="dashboard.html" class="">Tableau de bord</a>
+            </div>
+            <div class="footer-column">
+              <strong>Informations</strong>
+              <a href="conditions.html" class="">Conditions d’utilisation</a>
+              <a href="confidentialite.html" class="">Politique de confidentialité</a>
+              <a href="aide.html" class="">Centre d’aide</a>
+              <a href="connexion.html" class="">Connexion / inscription</a>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <span>© 2026 Weight’Aty. Tous droits réservés.</span>
+            <span>Conçu pour rapprocher les destinations.</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+    <dialog id="confirmation" aria-labelledby="dialog-title">
+      <h2 id="dialog-title">Confirmer l’action</h2>
+      <p id="dialog-message"></p>
+      <div class="actions">
+        <button id="dialog-cancel" class="btn secondary">Retour</button>
+        <button id="dialog-confirm" class="btn">Confirmer</button>
+      </div>
+    </dialog>
+    <noscript>Le contenu est écrit directement en HTML. Activez JavaScript pour les interactions de démonstration.</noscript>
+  </body>
+</html>

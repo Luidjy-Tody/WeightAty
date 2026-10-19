@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#087c63">
+    <meta name="description" content="Weight’Aty — Démonstration frontend de transport de colis.">
+    <title>Publier un trajet — Weight’Aty</title>
+    <link rel="icon" href="../assets/icons/logo.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/pages.css">
+    <script src="../js/app.js" defer></script>
+    <script src="../js/validation.js" defer></script>
+    <script src="../js/mock/data.js" defer></script>
+    <script src="../js/services/demo.js" defer></script>
+    <script src="../js/publier-trajet.js" defer></script>
+  </head>
+  <body data-page="publier-trajet">
+    <!-- LIEN VERS LE CONTENU -->
+    <a class="skip-link" href="#main">Aller au contenu</a>
+    <!-- BARRE DE NAVIGATION -->
+    <div id="header">
+      <header class="site-header">
+        <div class="container header-inner">
+          <a href="../index.html" class="brand">
+            <img src="../assets/icons/logo.svg" alt="">
+            <span>Weight<em>’Aty</em>
+            </span>
+          </a>
+          <button class="icon-button menu-toggle" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="main-nav">
+            <img src="../assets/icons/icone-460999eb13.svg" alt="" aria-hidden="true" class="icon">
+          </button>
+          <nav id="main-nav" class="main-nav" aria-label="Navigation principale">
+            <a href="../index.html">Accueil</a>
+            <a href="recherche.html">Rechercher un trajet</a>
+            <a href="publier-trajet.html" class="active" aria-current="page">Publier un trajet</a>
+            <a href="mes-demandes.html">Mes demandes</a>
+            <a href="mes-trajets.html">Mes trajets</a>
+          </nav>
+          <div class="account-nav">
+            <a class="icon-button" href="notifications.html" aria-label="2 notifications non lues">
+              <img src="../assets/icons/icone-dbf88ee5d6.svg" alt="" aria-hidden="true" class="icon">
+              <span class="badge-count">2</span>
+            </a>
+            <a href="profil.html" aria-label="Profil de démonstration de Marie">
+              <span class="avatar" aria-hidden="true">MN</span>
+            </a>
+            <span class="demo-label">Profil démo</span>
+          </div>
+        </div>
+      </header>
+    </div>
+    <!-- CONTENU DE LA PAGE -->
+    <main id="main" tabindex="-1">
+      <section id="page-error" hidden="" class="container page">
+        <h2>Informations indisponibles</h2>
+        <p data-error-message="">Cet élément n’est pas disponible.</p>
+        <a href="recherche.html" class="btn">Rechercher un trajet</a>
+      </section>
+      <div id="page-content">
+        <div class="container page">
+          <div class="page-heading between">
+            <div>
+              <p class="eyebrow">Espace voyageur</p>
+              <h1>Publier un trajet</h1>
+              <p>Partagez votre itinéraire et utilisez l’espace libre dans vos bagages.</p>
+            </div>
+          </div>
+          <div class="split">
+            <form class="card" id="trip-form" novalidate>
+              <div data-form-error class="notice error space-bottom" role="alert" hidden></div>
+              <div class="form-grid">
+                <div class="field">
+                  <label for="f-from">Lieu de départ <span class="required">*</span>
+                  </label>
+                  <input id="f-from" name="from" aria-describedby="f-from-error" aria-required="true" maxlength="100" type="text" value="" placeholder="Ex. Maurice">
+                  <p id="f-from-error" class="error" role="alert"></p>
+                </div>
+                <div class="field">
+                  <label for="f-to">Destination <span class="required">*</span>
+                  </label>
+                  <input id="f-to" name="to" aria-describedby="f-to-error" aria-required="true" maxlength="100" type="text" value="" placeholder="Ex. Paris">
+                  <p id="f-to-error" class="error" role="alert"></p>
+                </div>
+                <div class="field">
+                  <label for="f-date">Date du voyage <span class="required">*</span>
+                  </label>
+                  <input id="f-date" name="date" aria-describedby="f-date-error" aria-required="true" min="2026-10-19" type="date" value="" placeholder="">
+                  <p id="f-date-error" class="error" role="alert"></p>
+                </div>
+                <div class="field">
+                  <label for="f-capacity">Poids disponible <span class="required">*</span>
+                  </label>
+                  <div class="input-unit">
+                    <input id="f-capacity" name="capacity" aria-describedby="f-capacity-error" aria-required="true" min="0.1" step="0.1" type="number" value="" placeholder="">
+                    <span>kg</span>
+                  </div>
+                  <p id="f-capacity-error" class="error" role="alert"></p>
+                </div>
+              </div>
+              <div class="field">
+                <label for="f-pickup">Point de remise au départ</label>
+                <input id="f-pickup" name="pickup" aria-describedby="f-pickup-error" maxlength="300" type="text" value="" placeholder="Ville, quartier ou lieu de rendez-vous">
+                <p id="f-pickup-error" class="error" role="alert"></p>
+              </div>
+              <div class="field">
+                <label for="f-delivery">Point de récupération à l’arrivée</label>
+                <input id="f-delivery" name="delivery" aria-describedby="f-delivery-error" maxlength="300" type="text" value="" placeholder="">
+                <p id="f-delivery-error" class="error" role="alert"></p>
+              </div>
+              <div class="field">
+                <label for="f-notes">Informations complémentaires</label>
+                <textarea id="f-notes" name="notes" aria-describedby="f-notes-error" maxlength="2000" placeholder="Point de remise, conditions particulières…"></textarea>
+                <p id="f-notes-error" class="error" role="alert"></p>
+              </div>
+              <div class="notice ">
+                <img src="../assets/icons/icone-33f8b5d0f2.svg" alt="" aria-hidden="true" class="icon">
+                <span>La publication est simulée dans votre navigateur. Aucun trajet n’est publié sur un serveur.</span>
+              </div>
+              <div class="actions space-top">
+                <button class="btn" type="submit">Publier le trajet</button>
+                <a href="mes-trajets.html" class="btn secondary">Retour à mes trajets</a>
+              </div>
+            </form>
+            <aside class="card">
+              <h2 style="font-size:22px">Quelques conseils</h2>
+              <p>Indiquez un poids réellement disponible et des informations précises sur vos modalités de remise.</p>
+              <dl class="facts">
+                <div>
+                  <dt>Profil</dt>
+                  <dd>Vérifié — démo</dd>
+                </div>
+                <div>
+                  <dt>Réponse moyenne</dt>
+                  <dd>2 heures</dd>
+                </div>
+              </dl>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </main>
+    <!-- PIED DE PAGE -->
+    <div id="footer">
+      <footer class="site-footer">
+        <div class="container">
+          <div class="footer-grid">
+            <div>
+              <a href="../index.html" class="brand">
+                <img src="../assets/icons/logo.svg" alt="">
+                <span>Weight<em>’Aty</em>
+                </span>
+              </a>
+              <p>Le colis voyage autrement. Une plateforme de confiance qui connecte voyageurs et expéditeurs.</p>
+              <small>Démonstration locale · Aucune transaction réelle</small>
+            </div>
+            <div class="footer-column">
+              <strong>Weight’Aty</strong>
+              <a href="a-propos.html" class="">À propos</a>
+              <a href="contact.html" class="">Contact</a>
+              <a href="recherche.html" class="">Trouver un trajet</a>
+              <a href="dashboard.html" class="">Tableau de bord</a>
+            </div>
+            <div class="footer-column">
+              <strong>Informations</strong>
+              <a href="conditions.html" class="">Conditions d’utilisation</a>
+              <a href="confidentialite.html" class="">Politique de confidentialité</a>
+              <a href="aide.html" class="">Centre d’aide</a>
+              <a href="connexion.html" class="">Connexion / inscription</a>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <span>© 2026 Weight’Aty. Tous droits réservés.</span>
+            <span>Conçu pour rapprocher les destinations.</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+    <dialog id="confirmation" aria-labelledby="dialog-title">
+      <h2 id="dialog-title">Confirmer l’action</h2>
+      <p id="dialog-message"></p>
+      <div class="actions">
+        <button id="dialog-cancel" class="btn secondary">Retour</button>
+        <button id="dialog-confirm" class="btn">Confirmer</button>
+      </div>
+    </dialog>
+    <noscript>Le contenu est écrit directement en HTML. Activez JavaScript pour les interactions de démonstration.</noscript>
+  </body>
+</html>

@@ -1,74 +1,47 @@
-# Weight’Aty
+# Weight’Aty — Projet collaboratif
 
-Weight’Aty est une application mobile qui met en relation des expéditeurs et des voyageurs pour faciliter le transport de colis.
+Plateforme web reliant les voyageurs qui disposent de capacité de bagage aux expéditeurs de colis.
 
-## Technologies
+## Organisation
 
-- Frontend : Ionic 8, Angular, TypeScript
-- Backend : Node.js, Express, TypeScript
-- Base de données : PostgreSQL
-- Application Android : Capacitor
-- Gestion du projet : Jira et GitHub
+- `frontend/` : application de démonstration HTML5, CSS3 et JavaScript (sans backend). Le code d’origine est conservé.
+- `database/` : scripts MySQL officiels et guide d’installation.
+- `backend/` : espace réservé au développement en équipe ; aucun backend n’est encore créé.
 
-## Structure
+## Lancer le frontend
 
-- `mobile/` : application Ionic Angular
-- `backend/` : API REST
-- `database/` : scripts SQL
-- `docs/` : documentation
-- `tests/` : tests automatisés
+Dans VS Code, ouvrir `frontend/index.html` avec Live Server. Ou exécuter à la racine du dépôt :
 
-## Installation
+**Windows** : `py -m http.server 8080 --directory frontend`
 
-### 1. Cloner le projet
+**Ubuntu** : `python3 -m http.server 8080 --directory frontend`
 
-```bash
-git clone https://github.com/Luidjy-Tody/WeightAty.git
-cd WeightAty
-```
+Puis ouvrir http://localhost:8080/ .
 
-### 2. Installer le frontend
+Le frontend utilise actuellement des données fictives et `localStorage`, **pas MySQL**. La base ne sera accessible au navigateur qu’après développement des API backend.
 
-```bash
-cd mobile
-npm install
-ionic serve
-```
+## Installer MySQL pour l’équipe
 
-Application accessible sur http://localhost:8100
+1. Installer MySQL **8.0.16+** et ouvrir MySQL Workbench.
+2. Sur une base locale de développement, exécuter `database/01_creation_weightaty_securisee.sql`. Le nom commun est `weightaty_db`.
+3. Facultatif, **sur base de démonstration uniquement** : exécuter `database/02_donnees_test.sql` une seule fois.
+4. Exécuter `database/03_requetes_verification.sql`.
 
-### 3. Installer le backend
+Le script de création ne supprime pas les tables existantes, mais **ne migre pas** leur structure. Ne pas réexécuter les données de test. Les comptes fictifs n’ont pas de mots de passe utilisables.
 
-Dans un autre terminal :
+Lire `database/README.md` pour les limites et règles de sécurité.
 
-```bash
-cd backend
-npm install
-cp .env.example .env
-```
+## Collaboration Git
 
-Configurer les identifiants PostgreSQL dans `.env`.
+Chaque membre travaille sur une branche de fonctionnalité et ouvre une Pull Request vers la branche d’intégration choisie par l’équipe. Ne pas committer les fichiers `.env` ou les identifiants personnels.
 
-Créer la base de données `weightaty` dans PostgreSQL.
+## Documentation
 
-Démarrer le serveur :
+- `frontend/README.md` : structure du frontend, lancement, simulations et tests.
+- `frontend/docs/API.md` : besoins d’API à implémenter.
+- `database/README.md` : installation SQL et limites connues.
+- `backend/README.md` : préparation du futur backend.
 
-```bash
-npm run dev
-```
+## Tests du frontend
 
-API accessible sur http://localhost:3000/api/health
-
-## Organisation Git
-
-- `main` : version stable
-- `develop` : branche de développement
-- `feature/WAT-XX-description` : développement des User Stories
-
-Chaque fonctionnalité est développée sur une branche créée depuis `develop`.
-
-Une Pull Request est nécessaire avant de fusionner les modifications.
-
-## Maquette
-
-https://many-factor-45762435.figma.site
+Avec Node.js, depuis `frontend/` : `node --test tests/frontend.test.cjs`. Les tests navigateur Playwright sont facultatifs.

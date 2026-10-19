@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#087c63">
+    <meta name="description" content="Weight’Aty — Démonstration frontend de transport de colis.">
+    <title>Centre d’aide — Weight’Aty</title>
+    <link rel="icon" href="../assets/icons/logo.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/pages.css">
+    <script src="../js/app.js" defer></script>
+  </head>
+  <body data-page="aide">
+    <!-- LIEN VERS LE CONTENU -->
+    <a class="skip-link" href="#main">Aller au contenu</a>
+    <!-- BARRE DE NAVIGATION -->
+    <div id="header">
+      <header class="site-header">
+        <div class="container header-inner">
+          <a href="../index.html" class="brand">
+            <img src="../assets/icons/logo.svg" alt="">
+            <span>Weight<em>’Aty</em>
+            </span>
+          </a>
+          <button class="icon-button menu-toggle" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="main-nav">
+            <img src="../assets/icons/icone-460999eb13.svg" alt="" aria-hidden="true" class="icon">
+          </button>
+          <nav id="main-nav" class="main-nav" aria-label="Navigation principale">
+            <a href="../index.html">Accueil</a>
+            <a href="recherche.html">Rechercher un trajet</a>
+            <a href="publier-trajet.html">Publier un trajet</a>
+            <a href="mes-demandes.html">Mes demandes</a>
+            <a href="mes-trajets.html">Mes trajets</a>
+          </nav>
+          <div class="account-nav">
+            <a class="icon-button" href="notifications.html" aria-label="2 notifications non lues">
+              <img src="../assets/icons/icone-dbf88ee5d6.svg" alt="" aria-hidden="true" class="icon">
+              <span class="badge-count">2</span>
+            </a>
+            <a href="profil.html" aria-label="Profil de démonstration de Marie">
+              <span class="avatar" aria-hidden="true">MN</span>
+            </a>
+            <span class="demo-label">Profil démo</span>
+          </div>
+        </div>
+      </header>
+    </div>
+    <!-- CONTENU DE LA PAGE -->
+    <main id="main" tabindex="-1">
+      <section id="page-error" hidden="" class="container page">
+        <h2>Informations indisponibles</h2>
+        <p data-error-message="">Cet élément n’est pas disponible.</p>
+        <a href="recherche.html" class="btn">Rechercher un trajet</a>
+      </section>
+      <div id="page-content">
+        <div class="container page">
+          <div class="page-heading between">
+            <div>
+              <p class="eyebrow">Assistance</p>
+              <h1>Centre d’aide</h1>
+              <p>Les réponses aux questions fréquentes.</p>
+            </div>
+          </div>
+          <section class="card prose faq">
+            <details>
+              <summary>Comment envoyer un colis ?</summary>
+              <p>Recherchez un trajet, consultez ses détails et choisissez « Envoyer un colis ». Renseignez les informations, vérifiez le récapitulatif puis simulez la demande.</p>
+            </details>
+            <details>
+              <summary>Quels objets peut-on transporter ?</summary>
+              <p>Les colis doivent respecter les règles de transport. Les objets dangereux et les produits interdits ne sont pas acceptés. Vérifiez les conditions du voyageur et les règles du transporteur.</p>
+            </details>
+            <details>
+              <summary>Comment accepter une demande ?</summary>
+              <p>Ouvrez « Mes trajets », puis « Demandes reçues ». Consultez la demande et choisissez une action. Cette version met à jour uniquement les données fictives de votre navigateur.</p>
+            </details>
+            <details>
+              <summary>Les données sont-elles enregistrées en ligne ?</summary>
+              <p>Non. Cette version est un frontend de démonstration. Les données sont conservées localement quand le navigateur autorise ce stockage.</p>
+            </details>
+            <details>
+              <summary>Comment recommencer la démonstration ?</summary>
+              <p>Dans votre profil, utilisez « Réinitialiser la démonstration ». Cette action restaure les exemples initiaux.</p>
+            </details>
+            <details>
+              <summary>Comment fonctionne le paiement ?</summary>
+              <p>Aucun paiement n’est proposé dans cette démonstration. Les règles et services nécessaires seront définis par l’équipe lors du développement du backend.</p>
+            </details>
+          </section>
+          <div class="space-top">
+            <a href="contact.html" class="btn secondary">Nous contacter</a>
+          </div>
+        </div>
+      </div>
+    </main>
+    <!-- PIED DE PAGE -->
+    <div id="footer">
+      <footer class="site-footer">
+        <div class="container">
+          <div class="footer-grid">
+            <div>
+              <a href="../index.html" class="brand">
+                <img src="../assets/icons/logo.svg" alt="">
+                <span>Weight<em>’Aty</em>
+                </span>
+              </a>
+              <p>Le colis voyage autrement. Une plateforme de confiance qui connecte voyageurs et expéditeurs.</p>
+              <small>Démonstration locale · Aucune transaction réelle</small>
+            </div>
+            <div class="footer-column">
+              <strong>Weight’Aty</strong>
+              <a href="a-propos.html" class="">À propos</a>
+              <a href="contact.html" class="">Contact</a>
+              <a href="recherche.html" class="">Trouver un trajet</a>
+              <a href="dashboard.html" class="">Tableau de bord</a>
+            </div>
+            <div class="footer-column">
+              <strong>Informations</strong>
+              <a href="conditions.html" class="">Conditions d’utilisation</a>
+              <a href="confidentialite.html" class="">Politique de confidentialité</a>
+              <a href="aide.html" class="">Centre d’aide</a>
+              <a href="connexion.html" class="">Connexion / inscription</a>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <span>© 2026 Weight’Aty. Tous droits réservés.</span>
+            <span>Conçu pour rapprocher les destinations.</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+    <dialog id="confirmation" aria-labelledby="dialog-title">
+      <h2 id="dialog-title">Confirmer l’action</h2>
+      <p id="dialog-message"></p>
+      <div class="actions">
+        <button id="dialog-cancel" class="btn secondary">Retour</button>
+        <button id="dialog-confirm" class="btn">Confirmer</button>
+      </div>
+    </dialog>
+    <noscript>Le contenu est écrit directement en HTML. Activez JavaScript pour les interactions de démonstration.</noscript>
+  </body>
+</html>
