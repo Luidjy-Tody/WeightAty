@@ -1,64 +1,17 @@
-# DEPENDANCES
 node_modules/
 **/node_modules/
-
-# VARIABLES SENSIBLES
+test-results/
+**/test-results/
+playwright-report/
+**/playwright-report/
 .env
 .env.*
 !.env.example
+**/.env
+**/.env.*
 !**/.env.example
-
-# FICHIERS GENERES
-dist/
-www/
-coverage/
-.angular/
-.ionic/
-
-# FICHIERS SYSTEME
 .DS_Store
 Thumbs.db
-
-# EDITEURS
 .vscode/
 .idea/
-
-# FICHIERS DE LOG
 *.log
-
-
-# DEPENDANCES
-node_modules/
-**/node_modules/
-
-# VARIABLES D'ENVIRONNEMENT
-.env
-.env.*
-!.env.example
-!**/.env.example
-
-# FICHIERS GENERES
-dist/
-www/
-coverage/
-.angular/
-.ionic/
-
-# FICHIERS DE LOG
-*.log
-
-# EDITEURS
-.vscode/
-.idea/
-
-# SYSTEME
-.DS_Store
-Thumbs.db
-
-
-# FICHIERS GENERES TYPESCRIPT
-dist/
-backend/src/**/*.js
-backend/src/**/*.js.map
-backend/src/**/*.d.ts
-backend/src/**/*.d.ts.map

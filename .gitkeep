@@ -1,8 +1,0 @@
-find mobile/src/app/core \
-     mobile/src/app/features \
-     mobile/src/app/shared \
-     backend/src \
-     database \
-     docs \
-     tests \
-     -type d -empty -exec touch {}/.gitkeep \;

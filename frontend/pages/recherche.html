@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#087c63">
+    <meta name="description" content="Weight’Aty — Démonstration frontend de transport de colis.">
+    <title>Rechercher un trajet — Weight’Aty</title>
+    <link rel="icon" href="../assets/icons/logo.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/pages.css">
+    <script src="../js/app.js" defer></script>
+    <script src="../js/validation.js" defer></script>
+    <script src="../js/mock/data.js" defer></script>
+    <script src="../js/services/demo.js" defer></script>
+    <script src="../js/recherche.js" defer></script>
+  </head>
+  <body data-page="recherche">
+    <!-- LIEN VERS LE CONTENU -->
+    <a class="skip-link" href="#main">Aller au contenu</a>
+    <!-- BARRE DE NAVIGATION -->
+    <div id="header">
+      <header class="site-header">
+        <div class="container header-inner">
+          <a href="../index.html" class="brand">
+            <img src="../assets/icons/logo.svg" alt="">
+            <span>Weight<em>’Aty</em>
+            </span>
+          </a>
+          <button class="icon-button menu-toggle" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="main-nav">
+            <img src="../assets/icons/icone-460999eb13.svg" alt="" aria-hidden="true" class="icon">
+          </button>
+          <nav id="main-nav" class="main-nav" aria-label="Navigation principale">
+            <a href="../index.html">Accueil</a>
+            <a href="recherche.html" class="active" aria-current="page">Rechercher un trajet</a>
+            <a href="publier-trajet.html">Publier un trajet</a>
+            <a href="mes-demandes.html">Mes demandes</a>
+            <a href="mes-trajets.html">Mes trajets</a>
+          </nav>
+          <div class="account-nav">
+            <a class="icon-button" href="notifications.html" aria-label="2 notifications non lues">
+              <img src="../assets/icons/icone-dbf88ee5d6.svg" alt="" aria-hidden="true" class="icon">
+              <span class="badge-count">2</span>
+            </a>
+            <a href="profil.html" aria-label="Profil de démonstration de Marie">
+              <span class="avatar" aria-hidden="true">MN</span>
+            </a>
+            <span class="demo-label">Profil démo</span>
+          </div>
+        </div>
+      </header>
+    </div>
+    <!-- CONTENU DE LA PAGE -->
+    <main id="main" tabindex="-1">
+      <section id="page-error" hidden="" class="container page">
+        <h2>Informations indisponibles</h2>
+        <p data-error-message="">Cet élément n’est pas disponible.</p>
+        <a href="recherche.html" class="btn">Rechercher un trajet</a>
+      </section>
+      <div id="page-content">
+        <div class="container page">
+          <div class="page-heading between">
+            <div>
+              <p class="eyebrow">Trouver un voyageur</p>
+              <h1>Rechercher un trajet</h1>
+              <p>Trouvez l’itinéraire qui correspond à votre envoi.</p>
+            </div>
+          </div>
+          <div class="search-layout">
+            <aside class="card">
+              <h2 style="font-size:21px">Filtres</h2>
+              <form id="filters" novalidate>
+                <div class="filter-grid">
+                  <div class="field">
+                    <label for="f-from">Départ</label>
+                    <input id="f-from" name="from" aria-describedby="f-from-error" type="text" value="" placeholder="Ville ou pays">
+                    <p id="f-from-error" class="error" role="alert"></p>
+                  </div>
+                  <div class="field">
+                    <label for="f-to">Destination</label>
+                    <input id="f-to" name="to" aria-describedby="f-to-error" type="text" value="" placeholder="Ville ou pays">
+                    <p id="f-to-error" class="error" role="alert"></p>
+                  </div>
+                  <div class="field">
+                    <label for="f-date">Date</label>
+                    <input id="f-date" name="date" aria-describedby="f-date-error" type="date" value="" placeholder="">
+                    <p id="f-date-error" class="error" role="alert"></p>
+                  </div>
+                  <div class="field">
+                    <label for="f-minWeight">Poids minimum</label>
+                    <div class="input-unit">
+                      <input id="f-minWeight" name="minWeight" aria-describedby="f-minWeight-error" min="0" step="0.1" type="number" value="" placeholder="">
+                      <span>kg</span>
+                    </div>
+                    <p id="f-minWeight-error" class="error" role="alert"></p>
+                  </div>
+                </div>
+                <div class="actions">
+                  <button class="btn full">Appliquer les filtres</button>
+                  <button type="button" id="reset-search" class="btn ghost full">Réinitialiser</button>
+                </div>
+              </form>
+            </aside>
+            <section id="search-results" aria-label="Résultats de recherche" aria-live="polite">
+              <div class="results-toolbar">
+                <div>
+                  <strong data-result-count="">5 trajets trouvés</strong>
+                  <small id="sort-description">Triés par départs les plus proches</small>
+                </div>
+                <label class="sr-only" for="sort">Trier les résultats</label>
+                <select id="sort">
+                  <option value="date" selected>Départs les plus proches</option>
+                  <option value="weight">Poids disponible</option>
+                </select>
+              </div>
+              <div id="results-list">
+                <article class="card result-card">
+                  <div class="places">
+                    <small>Départ</small>
+                    <strong>Maurice</strong>
+                    <small>Destination</small>
+                    <strong>Paris</strong>
+                  </div>
+                  <div>
+                    <strong>12 novembre 2026</strong>
+                    <small>Date de voyage</small>
+                  </div>
+                  <div>
+                    <strong>8 kg</strong>
+                    <small>Poids disponible</small>
+                  </div>
+                  <div class="actions">
+                    <a href="trajet-details.html?id=TRA-1" class="btn">Voir les détails</a>
+                  </div>
+                </article>
+                <article class="card result-card">
+                  <div class="places">
+                    <small>Départ</small>
+                    <strong>Maurice</strong>
+                    <small>Destination</small>
+                    <strong>Paris</strong>
+                  </div>
+                  <div>
+                    <strong>12 novembre 2026</strong>
+                    <small>Date de voyage</small>
+                  </div>
+                  <div>
+                    <strong>8 kg</strong>
+                    <small>Poids disponible</small>
+                  </div>
+                  <div class="actions">
+                    <a href="trajet-details.html?id=MT-1" class="btn">Voir les détails</a>
+                  </div>
+                </article>
+                <article class="card result-card">
+                  <div class="places">
+                    <small>Départ</small>
+                    <strong>Paris</strong>
+                    <small>Destination</small>
+                    <strong>Montréal</strong>
+                  </div>
+                  <div>
+                    <strong>18 novembre 2026</strong>
+                    <small>Date de voyage</small>
+                  </div>
+                  <div>
+                    <strong>5 kg</strong>
+                    <small>Poids disponible</small>
+                  </div>
+                  <div class="actions">
+                    <a href="trajet-details.html?id=TRA-2" class="btn">Voir les détails</a>
+                  </div>
+                </article>
+                <article class="card result-card">
+                  <div class="places">
+                    <small>Départ</small>
+                    <strong>Lyon</strong>
+                    <small>Destination</small>
+                    <strong>Maurice</strong>
+                  </div>
+                  <div>
+                    <strong>24 novembre 2026</strong>
+                    <small>Date de voyage</small>
+                  </div>
+                  <div>
+                    <strong>12 kg</strong>
+                    <small>Poids disponible</small>
+                  </div>
+                  <div class="actions">
+                    <a href="trajet-details.html?id=TRA-3" class="btn">Voir les détails</a>
+                  </div>
+                </article>
+                <article class="card result-card">
+                  <div class="places">
+                    <small>Départ</small>
+                    <strong>Maurice</strong>
+                    <small>Destination</small>
+                    <strong>Londres</strong>
+                  </div>
+                  <div>
+                    <strong>2 décembre 2026</strong>
+                    <small>Date de voyage</small>
+                  </div>
+                  <div>
+                    <strong>6 kg</strong>
+                    <small>Poids disponible</small>
+                  </div>
+                  <div class="actions">
+                    <a href="trajet-details.html?id=TRA-4" class="btn">Voir les détails</a>
+                  </div>
+                </article>
+              </div>
+              <div id="search-empty" hidden="" class="card empty">
+                <h2>Aucun trajet trouvé</h2>
+                <p>Essayez de modifier vos critères.</p>
+                <button id="empty-reset" type="button" class="btn secondary">Réinitialiser les filtres</button>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+      <template id="trip-template">
+        <article class="card result-card">
+          <div class="places">
+            <small>Départ</small>
+            <strong data-from="">Maurice</strong>
+            <small>Destination</small>
+            <strong data-to="">Paris</strong>
+          </div>
+          <div>
+            <strong data-date="">12 novembre 2026</strong>
+            <small>Date de voyage</small>
+          </div>
+          <div>
+            <strong data-capacity="">8 kg</strong>
+            <small>Poids disponible</small>
+          </div>
+          <div class="actions">
+            <a href="trajet-details.html?id=TRA-1" class="btn">Voir les détails</a>
+          </div>
+        </article>
+      </template>
+    </main>
+    <!-- PIED DE PAGE -->
+    <div id="footer">
+      <footer class="site-footer">
+        <div class="container">
+          <div class="footer-grid">
+            <div>
+              <a href="../index.html" class="brand">
+                <img src="../assets/icons/logo.svg" alt="">
+                <span>Weight<em>’Aty</em>
+                </span>
+              </a>
+              <p>Le colis voyage autrement. Une plateforme de confiance qui connecte voyageurs et expéditeurs.</p>
+              <small>Démonstration locale · Aucune transaction réelle</small>
+            </div>
+            <div class="footer-column">
+              <strong>Weight’Aty</strong>
+              <a href="a-propos.html" class="">À propos</a>
+              <a href="contact.html" class="">Contact</a>
+              <a href="recherche.html" class="">Trouver un trajet</a>
+              <a href="dashboard.html" class="">Tableau de bord</a>
+            </div>
+            <div class="footer-column">
+              <strong>Informations</strong>
+              <a href="conditions.html" class="">Conditions d’utilisation</a>
+              <a href="confidentialite.html" class="">Politique de confidentialité</a>
+              <a href="aide.html" class="">Centre d’aide</a>
+              <a href="connexion.html" class="">Connexion / inscription</a>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <span>© 2026 Weight’Aty. Tous droits réservés.</span>
+            <span>Conçu pour rapprocher les destinations.</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+    <dialog id="confirmation" aria-labelledby="dialog-title">
+      <h2 id="dialog-title">Confirmer l’action</h2>
+      <p id="dialog-message"></p>
+      <div class="actions">
+        <button id="dialog-cancel" class="btn secondary">Retour</button>
+        <button id="dialog-confirm" class="btn">Confirmer</button>
+      </div>
+    </dialog>
+    <noscript>Le contenu est écrit directement en HTML. Activez JavaScript pour les interactions de démonstration.</noscript>
+  </body>
+</html>
