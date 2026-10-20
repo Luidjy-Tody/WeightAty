@@ -15,3 +15,4 @@ Thumbs.db
 .vscode/
 .idea/
 *.log
+/backend/config/config.local.php
