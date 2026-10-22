@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 declare(strict_types=1);
 
@@ -96,11 +96,20 @@ if (password_needs_rehash($utilisateur['mot_de_passe_hash'], PASSWORD_DEFAULT)) 
     ]);
 }
 
+session_set_cookie_params([
+    'lifetime' => 0,
+    'path' => '/',
+    'httponly' => true,
+    'samesite' => 'Lax'
+]);
+
 session_start();
 session_regenerate_id(true);
 
 $_SESSION['utilisateur_id'] = (int) $utilisateur['id'];
 $_SESSION['email'] = $utilisateur['email'];
+$_SESSION['prenom'] = $utilisateur['prenom'];
+$_SESSION['nom'] = $utilisateur['nom'];
 $_SESSION['date_connexion'] = time();
 
 http_response_code(200);

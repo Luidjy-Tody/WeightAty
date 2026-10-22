@@ -77,6 +77,9 @@ WAT.dom = {
 
   async run(action) {
     try {
+      // ATTENDRE LA SESSION AVANT D’EXÉCUTER LA PAGE :
+      // LE MOCK DOIT REFLETER L’UTILISATEUR RÉELLEMENT CONNECTÉ
+      await WAT.auth?.attendreSession?.();
       await action();
     } catch (error) {
       WAT.dom.notify(error.message, true);
@@ -121,6 +124,13 @@ WAT.dom = {
       dialog.showModal();
       document.getElementById('dialog-cancel').focus();
     });
+  }
+};
+
+// GABARITS HTML PARTAGÉS
+WAT.page = WAT.page || {
+  row(templateId) {
+    return document.getElementById(templateId).content.firstElementChild.cloneNode(true);
   }
 };
 

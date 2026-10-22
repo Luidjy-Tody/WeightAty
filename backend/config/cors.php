@@ -1,11 +1,14 @@
-﻿<?php
+<?php
 
 declare(strict_types=1);
 
-$origineAutorisee = getenv('CORS_ORIGIN') ?: '*';
+$origineAutorisee = getenv('CORS_ORIGIN') ?: ($_SERVER['HTTP_ORIGIN'] ?? '');
 
-header('Access-Control-Allow-Origin: ' . $origineAutorisee);
-header('Access-Control-Allow-Credentials: true');
+if ($origineAutorisee !== '') {
+    header('Access-Control-Allow-Origin: ' . $origineAutorisee);
+    header('Access-Control-Allow-Credentials: true');
+    header('Vary: Origin');
+}
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
 
