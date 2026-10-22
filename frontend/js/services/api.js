@@ -1,14 +1,38 @@
-/* CLIENT POUR LES FUTURES API */
-WAT.config = {mode:'mock',apiBaseUrl:''};
-WAT.api = async function(path,{method='GET',body,signal}={}) {
-  const response = await fetch(WAT.config.apiBaseUrl + path,{
-    method,credentials:'include',signal,
-    headers: body === undefined ? {'Accept':'application/json'} : {'Accept':'application/json','Content-Type':'application/json'},
-    ...(body === undefined ? {} : {body:JSON.stringify(body)})
+/* POINTEUR VERS LE BACKEND PHP */
+window.WAT = window.WAT || {};
+
+/* Adresse de base de l'API PHP.
+   En local (XAMPP) : http://localhost/weight-dev/WeightAty/backend
+   Adapter si le dossier du projet porte un autre nom. */
+WAT.config = window.WAT.config || {
+  mode: 'api',
+  apiBaseUrl: 'http://localhost/weight-dev/WeightAty/backend'
+};
+
+WAT.api = async function (path, { method = 'GET', body, signal } = {}) {
+  const response = await fetch(WAT.config.apiBaseUrl + path, {
+    method,
+    credentials: 'include',
+    signal,
+    headers: body === undefined
+      ? { Accept: 'application/json' }
+      : { Accept: 'application/json', 'Content-Type': 'application/json' },
+    ...(body === undefined ? {} : { body: JSON.stringify(body) })
   });
-  if (!response.ok) {
-    let error; try {error=await response.json();} catch {error={};}
-    throw new Error(error.message || `La requête a échoué (${response.status}).`);
+
+  let donnees = null;
+  try {
+    donnees = await response.json();
+  } catch {
+    donnees = null;
   }
-  return response.status === 204 ? null : response.json();
+
+  if (!response.ok) {
+    const erreur = new Error((donnees && donnees.message) || `La requête a échoué (${response.status}).`);
+    erreur.status = response.status;
+    erreur.errors = (donnees && donnees.errors) || null;
+    throw erreur;
+  }
+
+  return donnees;
 };

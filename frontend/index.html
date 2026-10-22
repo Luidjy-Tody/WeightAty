@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/pages.css">
     <script src="js/app.js" defer></script>
+    <script src="js/services/api.js" defer></script>
+    <script src="js/auth-guard.js" defer></script>
     <script src="js/accueil.js" defer></script>
   </head>
   <body data-page="index">
@@ -36,14 +38,15 @@
             <a href="pages/mes-trajets.html">Mes trajets</a>
           </nav>
           <div class="account-nav">
-            <a class="icon-button" href="pages/notifications.html" aria-label="2 notifications non lues">
+            <a class="icon-button" href="pages/notifications.html" aria-label="Notifications">
               <img src="assets/icons/icone-dbf88ee5d6.svg" alt="" aria-hidden="true" class="icon">
-              <span class="badge-count">2</span>
+              <span class="badge-count" data-auth="user" hidden>0</span>
             </a>
-            <a href="pages/profil.html" aria-label="Profil de démonstration de Marie">
-              <span class="avatar" aria-hidden="true">MN</span>
+            <a class="btn small" href="pages/connexion.html" data-auth="guest">Connexion</a>
+            <a href="pages/profil.html" aria-label="Mon profil" data-auth="user" hidden>
+              <span class="avatar" aria-hidden="true" data-auth-avatar>?</span>
             </a>
-            <span class="demo-label">Profil démo</span>
+            <button type="button" class="btn ghost small" data-auth="user" data-logout hidden>Déconnexion</button>
           </div>
         </div>
       </header>
