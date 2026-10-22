@@ -51,7 +51,7 @@ test('L’accueil contient ses textes, ses cartes, son formulaire et seulement d
   assert.match(source, /id="home-search"/);
   assert.match(source, /id="steps-traveler"/);
   assert.equal((source.match(/class="card trip-preview"/g) || []).length, 3);
-  assert.equal((source.match(/<script /g) || []).length, 2);
+  assert.equal((source.match(/<script /g) || []).length, 4);
 });
 
 test('Les formulaires sont écrits dans leurs fichiers HTML', () => {
