@@ -1,72 +1,57 @@
-/* VÉRIFICATIONS NAVIGATEUR OPTIONNELLES */
-const {chromium}=require('playwright');
-const assert=require('node:assert/strict');
-const {pathToFileURL}=require('node:url');
-const path=require('node:path');
-(async()=>{
-  const browser=await chromium.launch({headless:true});
-  const page=await browser.newPage({viewport:{width:1440,height:1000}});
-  const errors=[];
-  page.on('pageerror',error=>errors.push(error.message));
-  const entry=process.env.WAT_TEST_URL||'http://127.0.0.1:8080/index.html';
-  const pageUrl=file=>new URL(file,entry).href;
+// PARCOURS CONNECTÉ ET CONTRÔLES RESPONSIVE À EXÉCUTER SUR UNE BASE DE TEST.
+const { chromium } = require('playwright');
+const assert = require('node:assert/strict');
+const base = process.env.WEIGHTATY_TEST_URL;
+if (!base) throw new Error('WEIGHTATY_TEST_URL requis, par exemple http://localhost:8000');
+(async () => {
+  const browser = await chromium.launch({ headless: true });
+  const errors = [];
   try {
-    await page.goto(entry);
-    await page.getByRole('heading',{name:'Envoyez vos colis grâce aux voyageurs'}).waitFor();
-    await page.evaluate(()=>{localStorage.removeItem('weight-aty-demo-v1');});
-    await page.reload();
-    await page.getByRole('textbox',{name:'Lieu de départ',exact:true}).fill('Paris');
-    await page.getByRole('textbox',{name:'Destination',exact:true}).fill('Montréal');
-    await page.getByRole('button',{name:'Rechercher',exact:true}).click();
-    await page.getByText('1 trajet(s) trouvé(s)',{exact:true}).waitFor();
-    await page.getByRole('link',{name:'Voir les détails',exact:true}).click();
-    await page.getByRole('heading',{name:'Paris vers Montréal',exact:true}).waitFor();
-    await page.getByRole('link',{name:'Envoyer un colis',exact:true}).click();
-    await page.getByRole('heading',{name:'Informations de votre colis'}).waitFor();
-    await page.getByLabel('Type de colis').selectOption({label:'Documents'});
-    await page.getByLabel('Description').fill('Documents de test navigateur.');
-    await page.getByLabel('Poids',{exact:false}).fill('6');
-    await page.getByLabel('Valeur déclarée').fill('100');
-    await page.getByLabel('Longueur').fill('20');
-    await page.getByLabel('Largeur').fill('15');
-    await page.getByLabel('Hauteur').fill('10');
-    await page.getByRole('button',{name:'Valider les informations'}).click();
-    await page.getByText('Le poids dépasse la capacité maximale de 5 kg.',{exact:true}).waitFor();
-    await page.getByLabel('Poids',{exact:false}).fill('2');
-    await page.locator('#photo').setInputFiles({name:'photo.png',mimeType:'image/png',buffer:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aJ1sAAAAASUVORK5CYII=','base64')});
-    await page.locator('#photo-zone img').waitFor();
-    await page.getByRole('button',{name:'Supprimer la photo'}).click();
-    await page.getByRole('button',{name:'Valider les informations'}).click();
-    await page.getByRole('heading',{name:'Envoyer une demande',exact:true}).waitFor();
-    assert.ok((await page.locator('main').innerText()).includes('Sarah L.'));
-    await page.getByRole('link',{name:'Modifier',exact:true}).click();
-    await page.getByRole('heading',{name:'Informations de votre colis'}).waitFor();
-    assert.equal(await page.getByLabel('Description').inputValue(),'Documents de test navigateur.');
-    assert.equal(await page.getByLabel('Poids',{exact:false}).inputValue(),'2');
-    await page.getByRole('button',{name:'Valider les informations'}).click();
-    await page.getByRole('button',{name:'Simuler l’envoi de la demande'}).click();
-    await page.locator('#send-success').waitFor({state:'visible'});
-    await page.getByRole('link',{name:'Voir mes demandes',exact:true}).click();
-    await page.getByRole('heading',{name:'Mes demandes',exact:true}).waitFor();
-    assert.equal(await page.evaluate(()=>WAT.store.read().requests.filter(r=>r.senderId==='marie').length),2);
-    for(const width of [390,768,1440]){
-      await page.setViewportSize({width,height:1000});
-      for(const route of ['index.html','pages/recherche.html','pages/profil.html','pages/notifications.html','pages/connexion.html']){
-        await page.goto(pageUrl(route));
-        await page.locator('main h1').waitFor();
-        const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
-        assert.equal(overflow,false,`Débordement à ${width}px : ${route}`);
+    const traveler = await browser.newContext();
+    const sender = await browser.newContext();
+    async function fixture(context, role) {
+      let csrf = (await (await context.request.get(base + '/backend/api/index.php?op=session')).json()).csrf;
+      async function post(op, data) {
+        const response = await context.request.post(base + '/backend/api/index.php?op=' + op, { data, headers: { 'X-CSRF-Token': csrf } });
+        const result = await response.json(); assert.equal(response.status(), 200, JSON.stringify(result));
+        if (result.csrf) csrf = result.csrf; return result;
+      }
+      const email = 'pw-' + Date.now() + '-' + role + '@example.test';
+      await post('register', { firstName: 'Playwright', lastName: role, email, password: 'Playwright-tests-2026!' });
+      await post('login', { email, password: 'Playwright-tests-2026!' }); return post;
+    }
+    const publish = await fixture(traveler, 'voyageur');
+    await fixture(sender, 'expediteur');
+    const trip = await publish('saveTrip', { from: 'Paris PW ' + Date.now(), to: 'Montréal', date: '2099-05-01', capacity: 8, pickup: 'Paris gare', delivery: 'Montréal gare', notes: 'Test navigateur' });
+    const page = await sender.newPage();page.on('pageerror', e => errors.push(e.message));
+    await page.goto(base + '/frontend/pages/colis.html?trip=' + trip.id);
+    await page.locator('#f-weight-hint').filter({ hasText: '8' }).waitFor();
+    await page.locator('#f-type').selectOption('Documents');
+    for (const [name, value] of Object.entries({ description: 'Documents navigateur', weight: '9', value: '100', length: '20', width: '15', height: '10' })) await page.locator('[name="' + name + '"]').fill(value);
+    await page.locator('#parcel-form [type=submit]').click();
+    await page.locator('#f-weight-error').filter({ hasText: '8 kg' }).waitFor();
+    await page.locator('#f-weight').fill('2');await page.locator('#parcel-form [type=submit]').click();
+    await page.waitForURL('**/demande-transport.html');await page.locator('#send-request').click();
+    await page.locator('#send-success').waitFor({ state: 'visible' });
+    const href = await page.locator('[data-created-request]').getAttribute('href');
+    await page.goto(new URL(href, base + '/frontend/pages/').href);
+    const requestId = new URL(page.url()).searchParams.get('id');
+    const travelPage = await traveler.newPage();travelPage.on('pageerror', e => errors.push(e.message));
+    await travelPage.goto(base + '/frontend/pages/demande-details.html?id=' + requestId);
+    await travelPage.locator('[data-status="Acceptée"]').click();await travelPage.locator('#dialog-confirm').click();
+    await travelPage.locator('[data-request-status]').filter({ hasText: 'Acceptée' }).waitFor();
+    await page.goto(base + '/frontend/pages/transport.html?id=' + requestId);
+    await page.locator('#pay').waitFor({ state: 'visible' });await page.locator('#pay').click();await page.locator('#dialog-confirm').click();
+    await page.locator('#transport-price').filter({ hasText: 'Paiement simulé enregistré' }).waitFor();
+    for (const width of [360, 390, 768, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      for (const file of ['index.html', 'pages/recherche.html', 'pages/mes-demandes.html', 'pages/colis.html?trip=' + trip.id, 'pages/transport.html?id=' + requestId]) {
+        await page.goto(base + '/frontend/' + file);
+        await page.waitForLoadState('networkidle');
+        assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), file + ' à ' + width + 'px');
       }
     }
-    await page.goto(entry);
-    await page.setViewportSize({width:390,height:844});
-    const menu=page.getByRole('button',{name:'Ouvrir le menu'});
-    await menu.click();
-    assert.equal(await menu.getAttribute('aria-expanded'),'true');
-    await page.locator('#main-nav').getByRole('link',{name:'Mes trajets',exact:true}).click();
-    await page.getByRole('heading',{name:'Mes trajets',exact:true}).waitFor();
-    assert.equal(await page.locator('.menu-toggle').getAttribute('aria-expanded'),'false');
-    assert.deepEqual(errors,[],'Erreurs JavaScript détectées');
-    console.log('Vérifications navigateur réussies : parcours, photo, mobile, navigation et erreurs JS.');
-  } finally {await browser.close();}
-})().catch(error=>{console.error(error);process.exitCode=1;});
+    assert.deepEqual(errors, []);
+    console.log('Parcours connecté et 20 contrôles de largeur réussis.');
+  } finally { await browser.close(); }
+})().catch(error => { console.error(error); process.exit(1); });

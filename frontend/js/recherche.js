@@ -26,7 +26,7 @@ WAT.dom.run(async function () {
       d.text('[data-to]', trip.to, card);
       d.text('[data-date]', d.date(trip.date), card);
       d.text('[data-capacity]', d.number(trip.capacity) + ' kg', card);
-      card.querySelector('a').href = 'trajet-details.html?id=' + encodeURIComponent(trip.id);
+      card.querySelector('a').href = 'trajet-details.html?id=' + encodeURIComponent(trip.id) + (d.params.get('parcel') ? '&parcel=' + encodeURIComponent(d.params.get('parcel')) : '');
       results.append(card);
     });
     d.text('[data-result-count]', trips.length + ' trajet(s) trouvé(s)');

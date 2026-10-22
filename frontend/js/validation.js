@@ -9,7 +9,7 @@ WAT.validation = (() => {
     if (!String(p.description || '').trim()) errors.description = 'Décrivez le contenu du colis.';
     if (!positive(p.weight)) errors.weight = 'Indiquez un poids supérieur à 0.';
     else if (trip && Number(p.weight)>Number(trip.capacity)) errors.weight = `Le poids dépasse la capacité maximale de ${trip.capacity} kg.`;
-    if (!positive(p.value)) errors.value = 'Indiquez une valeur déclarée supérieure à 0.';
+    if (String(p.value ?? '').trim() === '' || !Number.isFinite(Number(p.value)) || Number(p.value) < 0) errors.value = 'Indiquez une valeur déclarée positive ou nulle.';
     for (const name of ['length','width','height']) if (!positive(p[name])) errors[name] = 'Indiquez une dimension supérieure à 0.';
     if (!trip || trip.status !== 'Publié' || trip.date<today()) errors.form = 'Ce trajet n’est plus disponible. Choisissez un autre trajet.';
     return errors;
@@ -22,6 +22,8 @@ WAT.validation = (() => {
     if (!/^\d{4}-\d{2}-\d{2}$/.test(t.date||'')) errors.date='Indiquez une date valide.';
     else if (t.date<today()) errors.date='Choisissez une date à partir d’aujourd’hui.';
     if (!positive(t.capacity)) errors.capacity='Indiquez un poids disponible supérieur à 0.';
+    if (!String(t.pickup||'').trim()) errors.pickup='Indiquez le lieu de remise.';
+    if (!String(t.delivery||'').trim()) errors.delivery='Indiquez le lieu de récupération.';
     return errors;
   }
   return {today,positive,email,parcel,trip};

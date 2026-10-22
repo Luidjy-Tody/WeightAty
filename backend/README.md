@@ -1,56 +1,20 @@
-# Backend — Weight’Aty
+# Backend PHP
 
-## 1. Technologies
+L’installation complète est décrite dans le README de la racine. Les fichiers qui étaient des squelettes sur `develop` délèguent maintenant au point d’entrée `api/index.php`.
 
-- **Langage :** PHP 8.2 ou supérieur
-- **Base de données :** MySQL
-- **Connexion à la base :** PDO
-- **Administration :** phpMyAdmin ou MySQL Workbench
-- **Environnement local :** XAMPP
+- `config/env.php` lit le fichier `.env` local sans interpréter son contenu. Les variables d’environnement déjà définies restent prioritaires.
+- `config/database.php` crée la connexion PDO avec requêtes préparées natives et fuseau UTC.
+- `lib/bootstrap.php` contient validation, sessions, autorisations, transactions et conversions destinées au frontend.
+- `api/index.php` distribue les opérations métier documentées dans `frontend/docs/API.md`.
+- `photo.php` sert une photo privée uniquement au propriétaire ou au voyageur d’une demande associée.
+- `cli.php` attribue le rôle administrateur depuis une commande locale.
+- `router.php` expose seulement les ressources frontend, les API et les photos autorisées.
+- `tests/` contient les scénarios reproductibles sur base de test.
 
-Le frontend utilise HTML, CSS et JavaScript. Il communiquera avec le backend PHP grâce à des requêtes HTTP. Les API retourneront principalement des réponses JSON.
+Chaque mutation passe dans une transaction InnoDB et verrouille la ligne `verrou_application.id=1`. Ce choix simple sérialise les mutations du projet étudiant et protège les acceptations concurrentes, y compris entre deux sessions. Une application à forte charge nécessiterait des verrous plus fins. Toutes les écritures métier doivent respecter cette convention, y compris les futurs traitements hors API.
 
-## 2. Architecture
+Les sessions PHP utilisent un cookie HttpOnly/SameSite=Lax, renouvelé à la connexion, une expiration après deux heures d’inactivité et une table `sessions_actives` pour la révocation. La table historique `session_utilisateur` est conservée sans suppression mais n’est pas utilisée par cette stratégie. La suspension et la réinitialisation invalident les sessions actives. Les mots de passe utilisent `password_hash`/`password_verify`. Seule l’empreinte SHA-256 des jetons de réinitialisation est en base. La boîte locale contient le lien destiné à l’utilisateur et doit rester privée.
 
-| Dossier | Responsabilité |
-|---|---|
-| `config/` | Connexion MySQL et configuration CORS |
-| `middleware/` | Authentification et autorisations |
-| `api/auth/` | Inscription, connexion et déconnexion |
-| `api/utilisateurs/` | Consultation et modification des profils |
-| `api/colis/` | Création, consultation et modification des colis |
-| `api/trajets/` | Publication et recherche des trajets |
-| `api/demandes/` | Création et suivi des demandes de transport |
-| `api/notifications/` | Consultation des notifications |
+Les requêtes POST exigent `X-CSRF-Token`, obtenu via `GET ?op=session`. Les API partagent l’origine du frontend ; aucun CORS permissif n’est activé. Les erreurs sont en JSON et les détails SQL restent dans les journaux serveur.
 
-Les fichiers PHP existants sont des emplacements préparés pour le développement. Ils ne constituent pas encore des API fonctionnelles.
-
-## 3. Installation locale
-
-1. Installer XAMPP avec PHP et un serveur de base de données compatible.
-2. Démarrer Apache et MySQL/MariaDB.
-3. Ouvrir phpMyAdmin.
-4. Exécuter les scripts SQL du dossier `database/` dans l'ordre indiqué dans son README.
-5. Configurer les identifiants de connexion MySQL localement, sans les publier sur GitHub.
-6. Tester les API PHP depuis un serveur local.
-
-**Attention :** XAMPP peut fournir MariaDB. Il faut vérifier la compatibilité des scripts avec la version utilisée.
-
-## 4. Règles de développement
-
-- Respecter les tâches attribuées dans Jira.
-- Créer une branche Git pour chaque tâche.
-- Utiliser PDO et des requêtes préparées pour les accès SQL.
-- Valider les données reçues avant leur enregistrement.
-- Retourner des réponses JSON avec les codes HTTP adaptés.
-- Vérifier l'authentification et les autorisations côté serveur.
-- Ne jamais publier les mots de passe ou fichiers de configuration contenant des secrets.
-- Tester les fonctionnalités avant de créer une Pull Request vers `develop`.
-
-## 5. Organisation du travail
-
-Chaque développeur est responsable des fichiers associés à sa tâche Jira.
-
-Les fichiers communs, comme `config/database.php`, doivent être coordonnés entre les membres pour éviter les conflits Git.
-
-Le développement du backend peut commencer après la fusion de la branche de migration dans `develop`.
+Les tarifs sont pédagogiques et configurables par `DEMO_RATE_CENTS` et `DEMO_FEE_CENTS`. Le montant est recalculé côté serveur et enregistré dans `paiement`. Les annulations avant prise en charge créent un remboursement simulé, sans supprimer la transaction. Aucune intégration bancaire n’est incluse.

@@ -17,7 +17,7 @@ WAT.dom.run(async function () {
     const cancel = row.querySelector('button');
     cancel.hidden = trip.status !== 'Publié';
     cancel.onclick = async function () {
-      if (!await d.confirm('Annuler ce trajet et les demandes actives de la démonstration ?')) return;
+      if (!await d.confirm('Annuler ce trajet et les demandes actives ?')) return;
       d.busy(cancel, async function () {
         await WAT.services.cancelTrip(trip.id);
         window.location.reload();

@@ -29,10 +29,10 @@ const sample = {
   weight: 2, value: 100, length: 20, width: 15, height: 10, photo: ''
 };
 
-test('Les 27 fichiers HTML et leurs ressources existent', () => {
+test('Les 30 fichiers HTML et leurs ressources existent', () => {
   const files = [path.join(root, 'index.html'), ...fs.readdirSync(path.join(root, 'pages'))
     .filter(name => name.endsWith('.html')).map(name => path.join(root, 'pages', name))];
-  assert.equal(files.length, 27);
+  assert.equal(files.length, 30);
   for (const file of files) {
     const source = fs.readFileSync(file, 'utf8');
     assert.doesNotMatch(source, /js\/views|WAT\.render|href="#\//);
@@ -44,14 +44,14 @@ test('Les 27 fichiers HTML et leurs ressources existent', () => {
   }
 });
 
-test('L’accueil contient ses textes, ses cartes, son formulaire et seulement deux scripts', () => {
+test('L’accueil contient ses textes, ses cartes, son formulaire et trois scripts dont le client API', () => {
   const source = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
   assert.match(source, /Envoyez vos colis/);
   assert.match(source, /class="hero"/);
   assert.match(source, /id="home-search"/);
   assert.match(source, /id="steps-traveler"/);
   assert.equal((source.match(/class="card trip-preview"/g) || []).length, 3);
-  assert.equal((source.match(/<script /g) || []).length, 2);
+  assert.equal((source.match(/<script /g) || []).length, 3);
 });
 
 test('Les formulaires sont écrits dans leurs fichiers HTML', () => {
@@ -154,7 +154,7 @@ test('Une demande sur son propre trajet est refusée', async () => {
 
 test('Un trajet publié localement apparaît dans les listes', async () => {
   const w = demo();
-  const trip = await w.services.saveTrip({from: 'Nice', to: 'Rome', date: w.seed.trips[0].date, capacity: 4});
+  const trip = await w.services.saveTrip({from: 'Nice', to: 'Rome', date: w.seed.trips[0].date, capacity: 4, pickup: 'Nice', delivery: 'Rome'});
   assert.ok((await w.services.getMyTrips()).some(t => t.id === trip.id));
   assert.ok((await w.services.getTrips({to: 'Rome'})).some(t => t.id === trip.id));
 });

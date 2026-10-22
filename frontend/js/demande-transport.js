@@ -8,8 +8,8 @@ WAT.dom.run(async function () {
   if (!trip) return d.error('Le trajet n’est plus disponible.');
   const owner = await WAT.page.tripSummary(trip);
   WAT.page.parcel(parcel);
-  d.text('[data-request-intro]', 'Vérifiez les informations avant de simuler votre demande pour ' + owner.name + '.');
-  d.text('[data-request-summary]', 'La démonstration associera ce colis au trajet ' + trip.from + ' → ' + trip.to + ' de ' + owner.name + ', prévu le ' + d.date(trip.date) + '.');
+  d.text('[data-request-intro]', 'Vérifiez les informations avant de envoyer votre demande pour ' + owner.name + '.');
+  d.text('[data-request-summary]', 'Votre demande associera ce colis au trajet ' + trip.from + ' → ' + trip.to + ' de ' + owner.name + ', prévu le ' + d.date(trip.date) + '.');
   document.querySelector('[data-edit-parcel]').href = 'colis.html?trip=' + encodeURIComponent(trip.id) + '&parcel=' + encodeURIComponent(parcel.id);
   const send = document.getElementById('send-request');
   const errors = WAT.validation.parcel(parcel, trip);

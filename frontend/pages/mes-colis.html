@@ -4,16 +4,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#087c63">
-    <meta name="description" content="Weight’Aty — Démonstration frontend de transport de colis.">
+    <meta name="description" content="Weight’Aty — Plateforme universitaire de transport de colis.">
     <title>Mes colis — Weight’Aty</title>
     <link rel="icon" href="../assets/icons/logo.svg" type="image/svg+xml">
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../css/components.css">
     <link rel="stylesheet" href="../css/pages.css">
     <script src="../js/app.js" defer></script>
+    <script src="../js/services/api.js" defer></script>
     <script src="../js/validation.js" defer></script>
-    <script src="../js/mock/data.js" defer></script>
-    <script src="../js/services/demo.js" defer></script>
+    <script src="../js/services/page-utils.js" defer></script>
     <script src="../js/mes-colis.js" defer></script>
   </head>
   <body data-page="mes-colis">
@@ -41,12 +41,12 @@
           <div class="account-nav">
             <a class="icon-button" href="notifications.html" aria-label="2 notifications non lues">
               <img src="../assets/icons/icone-dbf88ee5d6.svg" alt="" aria-hidden="true" class="icon">
-              <span class="badge-count">2</span>
+              <span class="badge-count" hidden>0</span>
             </a>
-            <a href="profil.html" aria-label="Profil de démonstration de Marie">
-              <span class="avatar" aria-hidden="true">MN</span>
+            <a href="profil.html" aria-label="Profil utilisateur">
+              <span class="avatar" aria-hidden="true"></span>
             </a>
-            <span class="demo-label">Profil démo</span>
+            <span class="demo-label">Mon compte</span>
           </div>
         </div>
       </header>
@@ -83,55 +83,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>WAT-1048</td>
-                  <td>Vêtements</td>
-                  <td>Vêtements et livres dans un petit carton.</td>
-                  <td>2,5 kg</td>
-                  <td>30 × 20 × 15 cm</td>
-                  <td>17 octobre 2026</td>
-                  <td>
-                    <span class="status pending">Brouillon</span>
-                  </td>
-                  <td>
-                    <div class="table-actions">
-                      <a href="colis-details.html?id=WAT-1048" class="btn secondary small">Consulter</a>
-                      <a href="colis.html?parcel=WAT-1048" class="btn ghost small">Reprendre</a>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>WAT-0931</td>
-                  <td>Documents</td>
-                  <td>Dossier administratif fictif.</td>
-                  <td>0,8 kg</td>
-                  <td>32 × 24 × 3 cm</td>
-                  <td>16 octobre 2026</td>
-                  <td>
-                    <span class="status success">Accepté</span>
-                  </td>
-                  <td>
-                    <div class="table-actions">
-                      <a href="colis-details.html?id=WAT-0931" class="btn secondary small">Consulter</a>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>WAT-0814</td>
-                  <td>Électronique</td>
-                  <td>Petit appareil photo de démonstration.</td>
-                  <td>1,2 kg</td>
-                  <td>20 × 15 × 12 cm</td>
-                  <td>19 septembre 2026</td>
-                  <td>
-                    <span class="status success">Livré</span>
-                  </td>
-                  <td>
-                    <div class="table-actions">
-                      <a href="colis-details.html?id=WAT-0814" class="btn secondary small">Consulter</a>
-                    </div>
-                  </td>
-                </tr>
+                <!-- DONNÉES CHARGÉES DEPUIS LE SERVEUR -->
               </tbody>
             </table>
           </div>
@@ -170,7 +122,7 @@
                 </span>
               </a>
               <p>Le colis voyage autrement. Une plateforme de confiance qui connecte voyageurs et expéditeurs.</p>
-              <small>Démonstration locale · Aucune transaction réelle</small>
+              <small>Projet universitaire · Paiements simulés</small>
             </div>
             <div class="footer-column">
               <strong>Weight’Aty</strong>
@@ -203,6 +155,6 @@
         <button id="dialog-confirm" class="btn">Confirmer</button>
       </div>
     </dialog>
-    <noscript>Le contenu est écrit directement en HTML. Activez JavaScript pour les interactions de démonstration.</noscript>
+    <noscript>Le contenu est écrit directement en HTML. Activez JavaScript pour les interactions.</noscript>
   </body>
 </html>

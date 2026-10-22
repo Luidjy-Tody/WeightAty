@@ -1,7 +1,7 @@
 // CONSULTER LE PROFIL PUBLIC DU VOYAGEUR
 WAT.dom.run(async function () {
   const d = WAT.dom;
-  const user = await WAT.services.getUser(d.params.get('id') || 'sarah');
+  const user = await WAT.services.getUser(d.params.get('id'));
   if (!user) return d.error('Ce profil est introuvable.');
   d.text('[data-profile-name]', user.name);
   d.text('.profile-card .avatar', user.initials);

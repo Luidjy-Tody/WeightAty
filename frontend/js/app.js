@@ -79,6 +79,7 @@ WAT.dom = {
     try {
       await action();
     } catch (error) {
+      if (document.getElementById('page-error')) WAT.dom.error(error.message);
       WAT.dom.notify(error.message, true);
     }
   },
@@ -148,22 +149,3 @@ if (menuButton && menu) {
   event.preventDefault();
   document.getElementById('main').focus();
 });
-
-// REFLÉTER LE PROFIL FICTIF DANS LA NAVIGATION EXISTANTE
-try {
-  const saved = JSON.parse(localStorage.getItem('weight-aty-demo-v1') || 'null');
-  if (saved) {
-    const user = saved.users?.find(function (item) { return item.id === saved.currentUserId; });
-    const count = (saved.notifications || []).filter(function (item) {
-      return item.userId === saved.currentUserId && !item.read;
-    }).length;
-    document.querySelectorAll('.badge-count').forEach(function (badge) {
-      badge.textContent = count;
-      badge.hidden = count === 0;
-      badge.parentElement.setAttribute('aria-label', count + ' notifications non lues');
-    });
-    if (user) WAT.dom.text('.account-nav .avatar', user.initials);
-  }
-} catch {
-  // LE CONTENU HTML RESTE DISPONIBLE SANS STOCKAGE LOCAL
-}

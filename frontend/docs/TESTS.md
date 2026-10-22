@@ -1,34 +1,13 @@
-# Vérifications de la version HTML classique
+# Vérifications exécutées le 22 octobre 2026
 
-Date : 19 octobre 2026.
+Environnement : PHP 8.3.6, MariaDB 10.11.14, Node du runtime et jsdom 30.1.3.
 
-## Exécuté
+- 16 tests frontend historiques réussis : ressources, architecture HTML, validations et logique mock. Ces tests seuls ne valident pas le backend.
+- 129 requêtes API vérifiées avec le lanceur `backend/tests/run_local.py`, dans une nouvelle base dédiée : authentification, droits, CSRF, validation, capacité concurrente, demandes, messages, paiements/remboursements simulés, livraison, avis, administration, suspension, réinitialisation, révocation et photos privées.
+- 32 contrôles DOM connectés réussis avec `frontend/tests/connected-dom.cjs` : formulaires de trajet et de colis, envoi de la demande, chargement des pages et absence d’erreurs JavaScript sur ces scénarios.
+- Structure SQL initiale et migration exécutées sur MariaDB ; pas d’exécution sur MySQL.
+- Contrôle de syntaxe PHP/JavaScript et `git diff --check`.
 
-- Syntaxe vérifiée avec `node --check` pour tous les scripts JavaScript.
-- `node --test tests/frontend.test.cjs` : **16 tests réussis, 0 échec**.
-- Présence des 27 pages HTML et des ressources locales auxquelles elles renvoient.
-- Présence des vrais formulaires dans les fichiers HTML.
-- Accueil : trois cartes, textes, formulaire, deux panneaux d’étapes et seulement deux scripts.
-- Absence de `innerHTML`, `outerHTML`, `insertAdjacentHTML`, `document.write` et de balises de page générées dans les scripts.
-- Suppression des anciennes vues JavaScript et du générateur de pages.
-- Tests logiques des filtres, poids, brouillons, demandes, capacités, annulations, notifications et stockage fictif sans mot de passe.
+Le script Playwright a été réécrit pour le mode connecté et les largeurs 360, 390, 768 et 1440 px. Son lancement reste à faire : le téléchargement de Chromium a échoué dans cet environnement. jsdom ne vérifie ni la mise en page, ni les interactions natives du navigateur, ni les performances mobiles. Aucun audit de sécurité externe ni test de charge n’a été effectué.
 
-## Non exécuté dans cet environnement
-
-Les tests Node ne sont pas des tests de navigateur. Ils ne valident pas l’apparence CSS, les événements réels du navigateur, le focus, le décodage des photos ou l’affichage sur téléphone.
-
-Le script Playwright est fourni mais n’a pas été exécuté ici : le dispositif autorisé de prévisualisation locale n’était pas disponible. Aucun navigateur local n’a été installé pour contourner cette limite.
-
-## À vérifier sur le poste de l’équipe
-
-1. Ouvrir avec Live Server ou un serveur statique HTTP.
-2. Tester les liens des pages et le menu mobile.
-3. Rechercher Paris → Montréal depuis l’accueil.
-4. Ouvrir le trajet de Sarah, saisir un colis trop lourd, puis un colis valide.
-5. Ajouter/supprimer une photo, revenir avec « Modifier », simuler l’envoi.
-6. Vérifier Mes colis, Mes demandes, les notifications et les compteurs.
-7. Accepter/refuser une demande reçue et tester l’annulation d’un trajet.
-8. Tester les formulaires de profil et d’accès simulé.
-9. Vérifier les largeurs 360, 390, 768 et 1440 px sur plusieurs navigateurs.
-
-Aucun test de serveur, base de données, authentification réelle, e-mail ou paiement : ces éléments sont hors périmètre.
+Commandes et prérequis : README principal. Les fixtures des tests sont créées par inscription et ne dépendent pas des mots de passe fictifs des anciens scripts SQL.

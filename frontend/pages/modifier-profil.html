@@ -4,16 +4,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#087c63">
-    <meta name="description" content="Weight’Aty — Démonstration frontend de transport de colis.">
+    <meta name="description" content="Weight’Aty — Plateforme universitaire de transport de colis.">
     <title>Profil utilisateur — Weight’Aty</title>
     <link rel="icon" href="../assets/icons/logo.svg" type="image/svg+xml">
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../css/components.css">
     <link rel="stylesheet" href="../css/pages.css">
     <script src="../js/app.js" defer></script>
+    <script src="../js/services/api.js" defer></script>
     <script src="../js/validation.js" defer></script>
-    <script src="../js/mock/data.js" defer></script>
-    <script src="../js/services/demo.js" defer></script>
+    <script src="../js/services/page-utils.js" defer></script>
     <script src="../js/profil.js" defer></script>
   </head>
   <body data-page="modifier-profil">
@@ -41,12 +41,12 @@
           <div class="account-nav">
             <a class="icon-button" href="notifications.html" aria-label="2 notifications non lues">
               <img src="../assets/icons/icone-dbf88ee5d6.svg" alt="" aria-hidden="true" class="icon">
-              <span class="badge-count">2</span>
+              <span class="badge-count" hidden>0</span>
             </a>
-            <a href="profil.html" aria-label="Profil de démonstration de Marie">
-              <span class="avatar" aria-hidden="true">MN</span>
+            <a href="profil.html" aria-label="Profil utilisateur">
+              <span class="avatar" aria-hidden="true"></span>
             </a>
-            <span class="demo-label">Profil démo</span>
+            <span class="demo-label">Mon compte</span>
           </div>
         </div>
       </header>
@@ -58,94 +58,90 @@
         <p data-error-message="">Cet élément n’est pas disponible.</p>
         <a href="recherche.html" class="btn">Rechercher un trajet</a>
       </section>
-      <div id="page-content">
+      <div id="page-content" style="display:none">
         <div class="container page">
           <div class="page-heading between">
             <div>
-              <p class="eyebrow">Profil de démonstration</p>
+              <p class="eyebrow">Profil utilisateur</p>
               <h1>Modifier mon profil</h1>
               <p>Gérez ce que les autres membres voient et vos informations de compte.</p>
             </div>
           </div>
           <div class="profile-layout">
             <aside class="card profile-card">
-              <span class="avatar large" aria-hidden="true">MN</span>
-              <h2 style="font-size:23px" data-profile-name="">Marie Noël</h2>
-              <p class="text-green">✓ Profil vérifié · Démo</p>
+              <span class="avatar large" aria-hidden="true"></span>
+              <h2 style="font-size:23px" data-profile-name=""></h2>
+              <p class="text-green">Profil utilisateur</p>
               <dl class="facts">
                 <div>
                   <dt>Membre depuis</dt>
-                  <dd>2024</dd>
+                  <dd>—</dd>
                 </div>
                 <div>
                   <dt>Évaluation</dt>
-                  <dd>★ 4,9</dd>
+                  <dd>Aucune évaluation</dd>
                 </div>
                 <div>
                   <dt>Trajets réalisés</dt>
-                  <dd>12</dd>
+                  <dd>0</dd>
                 </div>
               </dl>
               <a href="dashboard.html" class="btn secondary full space-top">Tableau de bord</a>
-              <button class="btn ghost full space-top" id="logout">Quitter le profil démo</button>
+              <button class="btn ghost full space-top" id="logout" type="button">Déconnexion</button>
             </aside>
             <div class="stack">
-              <form class="card" id="public-profile" novalidate>
+              <form method="post" class="card" id="public-profile" novalidate>
                 <p class="eyebrow">Informations publiques</p>
                 <h2 style="font-size:25px">Visible par la communauté</h2>
                 <div class="form-grid">
                   <div class="field">
                     <label for="f-firstName">Prénom <span class="required">*</span>
                     </label>
-                    <input id="f-firstName" name="firstName" aria-describedby="f-firstName-error" aria-required="true" maxlength="80" autocomplete="given-name" type="text" value="Marie" placeholder="">
+                    <input id="f-firstName" name="firstName" aria-describedby="f-firstName-error" aria-required="true" maxlength="80" autocomplete="given-name" type="text" value="" placeholder="">
                     <p id="f-firstName-error" class="error" role="alert"></p>
                   </div>
                   <div class="field">
                     <label for="f-lastName">Nom <span class="required">*</span>
                     </label>
-                    <input id="f-lastName" name="lastName" aria-describedby="f-lastName-error" aria-required="true" maxlength="80" autocomplete="family-name" type="text" value="Noël" placeholder="">
+                    <input id="f-lastName" name="lastName" aria-describedby="f-lastName-error" aria-required="true" maxlength="80" autocomplete="family-name" type="text" value="" placeholder="">
                     <p id="f-lastName-error" class="error" role="alert"></p>
                   </div>
                 </div>
                 <div class="field">
                   <label for="f-location">Localisation</label>
-                  <input id="f-location" name="location" aria-describedby="f-location-error" maxlength="150" type="text" value="Port-Louis, Maurice" placeholder="">
+                  <input id="f-location" name="location" aria-describedby="f-location-error" maxlength="150" type="text" value="" placeholder="">
                   <p id="f-location-error" class="error" role="alert"></p>
                 </div>
                 <div class="field">
                   <label for="f-about">À propos</label>
-                  <textarea id="f-about" name="about" aria-describedby="f-about-error" maxlength="1000" placeholder="">Voyageuse régulière entre Maurice et la France.</textarea>
+                  <textarea id="f-about" name="about" aria-describedby="f-about-error" maxlength="1000" placeholder=""></textarea>
                   <p id="f-about-error" class="error" role="alert"></p>
                 </div>
                 <button class="btn">Enregistrer les informations publiques</button>
               </form>
-              <form class="card" id="private-profile" novalidate>
+              <form method="post" class="card" id="private-profile" novalidate>
                 <p class="eyebrow">Informations privées</p>
                 <h2 style="font-size:25px">Compte et sécurité</h2>
                 <div class="notice ">
                   <img src="../assets/icons/icone-33f8b5d0f2.svg" alt="" aria-hidden="true" class="icon">
-                  <span>Utilisez seulement des coordonnées fictives. Cette démonstration ne sécurise pas les données enregistrées dans le navigateur.</span>
+                  <span>Vos coordonnées privées sont réservées à votre compte.</span>
                 </div>
                 <div class="space-top">
                   <div class="field">
                     <label for="f-email">Adresse e-mail <span class="required">*</span>
                     </label>
-                    <input id="f-email" name="email" aria-describedby="f-email-error" aria-required="true" autocomplete="email" maxlength="254" type="email" value="marie.demo@example.com" placeholder="">
+                    <input id="f-email" name="email" aria-describedby="f-email-error" aria-required="true" autocomplete="email" maxlength="254" type="email" value="" placeholder="">
                     <p id="f-email-error" class="error" role="alert"></p>
                   </div>
                   <div class="field">
                     <label for="f-phone">Téléphone</label>
-                    <input id="f-phone" name="phone" aria-describedby="f-phone-error" autocomplete="tel" maxlength="40" type="tel" value="+230 5000 0000" placeholder="">
+                    <input id="f-phone" name="phone" aria-describedby="f-phone-error" autocomplete="tel" maxlength="40" type="tel" value="" placeholder="">
                     <p id="f-phone-error" class="error" role="alert"></p>
                   </div>
                 </div>
                 <button class="btn secondary">Enregistrer les informations privées</button>
               </form>
-              <section class="card">
-                <h2 style="font-size:23px">Données de démonstration</h2>
-                <p>Les données sont propres à ce navigateur. Vous pouvez rétablir les exemples initiaux.</p>
-                <button class="btn danger" id="reset-demo">Réinitialiser la démonstration</button>
-              </section>
+
             </div>
           </div>
         </div>
@@ -163,7 +159,7 @@
                 </span>
               </a>
               <p>Le colis voyage autrement. Une plateforme de confiance qui connecte voyageurs et expéditeurs.</p>
-              <small>Démonstration locale · Aucune transaction réelle</small>
+              <small>Projet universitaire · Paiements simulés</small>
             </div>
             <div class="footer-column">
               <strong>Weight’Aty</strong>
@@ -196,6 +192,6 @@
         <button id="dialog-confirm" class="btn">Confirmer</button>
       </div>
     </dialog>
-    <noscript>Le contenu est écrit directement en HTML. Activez JavaScript pour les interactions de démonstration.</noscript>
+    <noscript>Le contenu est écrit directement en HTML. Activez JavaScript pour les interactions.</noscript>
   </body>
 </html>

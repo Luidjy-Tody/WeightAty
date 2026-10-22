@@ -3,6 +3,7 @@ WAT.dom.run(async function () {
   const d = WAT.dom;
   const id = d.params.get('edit');
   const form = document.getElementById('trip-form');
+  form.elements.date.min = WAT.validation.today();
   if (id) {
     const trip = await WAT.services.getTrip(id);
     const user = await WAT.services.getUser();

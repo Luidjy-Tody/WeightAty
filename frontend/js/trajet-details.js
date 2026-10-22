@@ -1,7 +1,7 @@
 // AFFICHER LES DONNÉES DU TRAJET CHOISI
 WAT.dom.run(async function () {
   const d = WAT.dom;
-  const trip = await WAT.services.getTrip(d.params.get('id') || 'TRA-1');
+  const trip = await WAT.services.getTrip(d.params.get('id'));
   if (!trip) return d.error('Ce trajet est introuvable.');
   const owner = await WAT.page.tripSummary(trip);
   d.text('[data-trip-title]', trip.from + ' vers ' + trip.to);
@@ -12,7 +12,7 @@ WAT.dom.run(async function () {
   d.text('[data-owner-since]', 'Membre depuis ' + owner.since);
   document.querySelector('[data-owner-link]').href = 'voyageur.html?id=' + encodeURIComponent(owner.id);
   const send = document.querySelector('[data-send-parcel]');
-  send.href = 'colis.html?trip=' + encodeURIComponent(trip.id);
+  send.href = 'colis.html?trip=' + encodeURIComponent(trip.id) + (d.params.get('parcel') ? '&parcel=' + encodeURIComponent(d.params.get('parcel')) : '');
   const mine = trip.ownerId === (await WAT.services.getUser())?.id;
   if (mine) {
     send.href = 'mon-trajet.html?id=' + encodeURIComponent(trip.id);

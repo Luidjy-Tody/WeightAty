@@ -4,13 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#087c63">
-    <meta name="description" content="Weight’Aty — Démonstration frontend de transport de colis.">
+    <meta name="description" content="Weight’Aty — Plateforme universitaire de transport de colis.">
     <title>Mot de passe oublié — Weight’Aty</title>
     <link rel="icon" href="../assets/icons/logo.svg" type="image/svg+xml">
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../css/components.css">
     <link rel="stylesheet" href="../css/pages.css">
     <script src="../js/app.js" defer></script>
+    <script src="../js/services/api.js" defer></script>
     <script src="../js/auth.js" defer></script>
   </head>
   <body data-page="mot-de-passe-oublie">
@@ -38,12 +39,12 @@
           <div class="account-nav">
             <a class="icon-button" href="notifications.html" aria-label="2 notifications non lues">
               <img src="../assets/icons/icone-dbf88ee5d6.svg" alt="" aria-hidden="true" class="icon">
-              <span class="badge-count">2</span>
+              <span class="badge-count" hidden>0</span>
             </a>
-            <a href="profil.html" aria-label="Profil de démonstration de Marie">
-              <span class="avatar" aria-hidden="true">MN</span>
+            <a href="profil.html" aria-label="Profil utilisateur">
+              <span class="avatar" aria-hidden="true"></span>
             </a>
-            <span class="demo-label">Profil démo</span>
+            <span class="demo-label">Mon compte</span>
           </div>
         </div>
       </header>
@@ -69,7 +70,7 @@
             <p class="small">Plateforme web responsive · Démonstration</p>
           </aside>
           <section class="auth-main">
-            <form id="auth-form" class="auth-form" novalidate>
+            <form method="post" id="auth-form" class="auth-form" novalidate>
               <p class="eyebrow">Votre espace</p>
               <h1>Mot de passe oublié</h1>
               <p>Recevez un lien pour réinitialiser votre mot de passe.</p>
@@ -81,11 +82,10 @@
               </div>
               <div class="notice ">
                 <img src="../assets/icons/icone-33f8b5d0f2.svg" alt="" aria-hidden="true" class="icon">
-                <span>Démonstration uniquement. Utilisez des informations fictives. Aucun compte réel, aucun e-mail envoyé et aucun mot de passe enregistré.</span>
+                <span>Vos informations sont enregistrées dans votre compte. Les paiements restent simulés.</span>
               </div>
-              <button class="btn full" type="submit">Simuler l’envoi du lien</button>
+              <button class="btn full" type="submit">Envoyer du lien</button>
               <div id="auth-result" role="status" hidden="" class="notice"></div>
-              <button class="btn secondary full" type="button" id="open-demo">Accéder directement à la démo</button>
               <p class="center small">
                 <a href="connexion.html" class="">Retour à la connexion</a>
               </p>
@@ -107,7 +107,7 @@
                 </span>
               </a>
               <p>Le colis voyage autrement. Une plateforme de confiance qui connecte voyageurs et expéditeurs.</p>
-              <small>Démonstration locale · Aucune transaction réelle</small>
+              <small>Projet universitaire · Paiements simulés</small>
             </div>
             <div class="footer-column">
               <strong>Weight’Aty</strong>
@@ -140,6 +140,6 @@
         <button id="dialog-confirm" class="btn">Confirmer</button>
       </div>
     </dialog>
-    <noscript>Le contenu est écrit directement en HTML. Activez JavaScript pour les interactions de démonstration.</noscript>
+    <noscript>Le contenu est écrit directement en HTML. Activez JavaScript pour les interactions.</noscript>
   </body>
 </html>
