@@ -5,9 +5,9 @@ WAT.store = (() => {
   let persistent = true;
   const clone = value => JSON.parse(JSON.stringify(value));
   try {
-    const saved = JSON.parse(localStorage.getItem(key) || 'null');
-    state = saved && saved.version === 1 && Array.isArray(saved.trips) && Array.isArray(saved.parcels) && Array.isArray(saved.requests) && Array.isArray(saved.users) && Array.isArray(saved.notifications) ? saved : clone(WAT.seed);
-  } catch { state = clone(WAT.seed); persistent = false; }
+    const saved = WAT.backend ? null : JSON.parse(localStorage.getItem(key) || 'null');
+    state = saved && saved.version === 1 && Array.isArray(saved.trips) && Array.isArray(saved.parcels) && Array.isArray(saved.requests) && Array.isArray(saved.users) && Array.isArray(saved.notifications) ? saved : clone(WAT.seed || {});
+  } catch { state = clone(WAT.seed || {}); persistent = false; }
   function save() {
     try { localStorage.setItem(key,JSON.stringify(state)); persistent = true; }
     catch { persistent = false; }
@@ -15,7 +15,7 @@ WAT.store = (() => {
   return {
     read: () => clone(state),
     update(fn) { const next = clone(state); const result = fn(next); state = next; save(); return clone(result ?? state); },
-    reset() { state = clone(WAT.seed); save(); },
+    reset() { state = clone(WAT.seed || {}); save(); },
     isPersistent: () => persistent,
     id: prefix => prefix + '-' + (globalThis.crypto?.randomUUID?.() || Date.now().toString(36) + Math.random().toString(36).slice(2,8))
   };
@@ -106,7 +106,7 @@ WAT.mock = (() => {
 })();
 
 // SERVICE ACTIF POUR LA DÉMONSTRATION
-WAT.services = WAT.mock;
+WAT.services = WAT.backend || WAT.mock;
 
 // METTRE À JOUR LES VALEURS, SANS RECRÉER LA PAGE HTML
 WAT.page = {
@@ -122,7 +122,7 @@ WAT.page = {
     d.text('[data-owner-initials]', owner?.initials);
     d.text('[data-owner-rating]', '★ ' + d.number(owner?.rating));
     d.text('[data-owner-completed]', d.number(owner?.completed) + ' trajets réalisés');
-    d.text('[data-owner-description]', owner?.name + ' est un voyageur vérifié avec ' + owner?.completed + ' trajets réalisés.');
+    d.text('[data-owner-description]', owner?.name + ' a réalisé ' + owner?.completed + ' trajets réalisés.');
     return owner;
   },
 
@@ -148,7 +148,7 @@ WAT.page = {
 };
 
 // COMPTEUR DE NOTIFICATIONS DU PROFIL FICTIF
-if (typeof document !== 'undefined') WAT.dom.run(async function () {
+if (typeof document !== 'undefined' && !WAT.backend) WAT.dom.run(async function () {
   const user = await WAT.services.getUser();
   if (!user) return;
   WAT.dom.text('.account-nav .avatar', user.initials);

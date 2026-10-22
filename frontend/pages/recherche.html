@@ -4,16 +4,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#087c63">
-    <meta name="description" content="Weight’Aty — Démonstration frontend de transport de colis.">
+    <meta name="description" content="Weight’Aty — Plateforme universitaire de transport de colis.">
     <title>Rechercher un trajet — Weight’Aty</title>
     <link rel="icon" href="../assets/icons/logo.svg" type="image/svg+xml">
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../css/components.css">
     <link rel="stylesheet" href="../css/pages.css">
     <script src="../js/app.js" defer></script>
+    <script src="../js/services/api.js" defer></script>
     <script src="../js/validation.js" defer></script>
-    <script src="../js/mock/data.js" defer></script>
-    <script src="../js/services/demo.js" defer></script>
+    <script src="../js/services/page-utils.js" defer></script>
     <script src="../js/recherche.js" defer></script>
   </head>
   <body data-page="recherche">
@@ -41,12 +41,12 @@
           <div class="account-nav">
             <a class="icon-button" href="notifications.html" aria-label="2 notifications non lues">
               <img src="../assets/icons/icone-dbf88ee5d6.svg" alt="" aria-hidden="true" class="icon">
-              <span class="badge-count">2</span>
+              <span class="badge-count" hidden>0</span>
             </a>
-            <a href="profil.html" aria-label="Profil de démonstration de Marie">
-              <span class="avatar" aria-hidden="true">MN</span>
+            <a href="profil.html" aria-label="Profil utilisateur">
+              <span class="avatar" aria-hidden="true"></span>
             </a>
-            <span class="demo-label">Profil démo</span>
+            <span class="demo-label">Mon compte</span>
           </div>
         </div>
       </header>
@@ -70,7 +70,7 @@
           <div class="search-layout">
             <aside class="card">
               <h2 style="font-size:21px">Filtres</h2>
-              <form id="filters" novalidate>
+              <form method="post" id="filters" novalidate>
                 <div class="filter-grid">
                   <div class="field">
                     <label for="f-from">Départ</label>
@@ -115,101 +115,7 @@
                 </select>
               </div>
               <div id="results-list">
-                <article class="card result-card">
-                  <div class="places">
-                    <small>Départ</small>
-                    <strong>Maurice</strong>
-                    <small>Destination</small>
-                    <strong>Paris</strong>
-                  </div>
-                  <div>
-                    <strong>12 novembre 2026</strong>
-                    <small>Date de voyage</small>
-                  </div>
-                  <div>
-                    <strong>8 kg</strong>
-                    <small>Poids disponible</small>
-                  </div>
-                  <div class="actions">
-                    <a href="trajet-details.html?id=TRA-1" class="btn">Voir les détails</a>
-                  </div>
-                </article>
-                <article class="card result-card">
-                  <div class="places">
-                    <small>Départ</small>
-                    <strong>Maurice</strong>
-                    <small>Destination</small>
-                    <strong>Paris</strong>
-                  </div>
-                  <div>
-                    <strong>12 novembre 2026</strong>
-                    <small>Date de voyage</small>
-                  </div>
-                  <div>
-                    <strong>8 kg</strong>
-                    <small>Poids disponible</small>
-                  </div>
-                  <div class="actions">
-                    <a href="trajet-details.html?id=MT-1" class="btn">Voir les détails</a>
-                  </div>
-                </article>
-                <article class="card result-card">
-                  <div class="places">
-                    <small>Départ</small>
-                    <strong>Paris</strong>
-                    <small>Destination</small>
-                    <strong>Montréal</strong>
-                  </div>
-                  <div>
-                    <strong>18 novembre 2026</strong>
-                    <small>Date de voyage</small>
-                  </div>
-                  <div>
-                    <strong>5 kg</strong>
-                    <small>Poids disponible</small>
-                  </div>
-                  <div class="actions">
-                    <a href="trajet-details.html?id=TRA-2" class="btn">Voir les détails</a>
-                  </div>
-                </article>
-                <article class="card result-card">
-                  <div class="places">
-                    <small>Départ</small>
-                    <strong>Lyon</strong>
-                    <small>Destination</small>
-                    <strong>Maurice</strong>
-                  </div>
-                  <div>
-                    <strong>24 novembre 2026</strong>
-                    <small>Date de voyage</small>
-                  </div>
-                  <div>
-                    <strong>12 kg</strong>
-                    <small>Poids disponible</small>
-                  </div>
-                  <div class="actions">
-                    <a href="trajet-details.html?id=TRA-3" class="btn">Voir les détails</a>
-                  </div>
-                </article>
-                <article class="card result-card">
-                  <div class="places">
-                    <small>Départ</small>
-                    <strong>Maurice</strong>
-                    <small>Destination</small>
-                    <strong>Londres</strong>
-                  </div>
-                  <div>
-                    <strong>2 décembre 2026</strong>
-                    <small>Date de voyage</small>
-                  </div>
-                  <div>
-                    <strong>6 kg</strong>
-                    <small>Poids disponible</small>
-                  </div>
-                  <div class="actions">
-                    <a href="trajet-details.html?id=TRA-4" class="btn">Voir les détails</a>
-                  </div>
-                </article>
+                <!-- DONNÉES CHARGÉES DEPUIS LE SERVEUR -->
               </div>
               <div id="search-empty" hidden="" class="card empty">
                 <h2>Aucun trajet trouvé</h2>
@@ -237,7 +143,7 @@
             <small>Poids disponible</small>
           </div>
           <div class="actions">
-            <a href="trajet-details.html?id=TRA-1" class="btn">Voir les détails</a>
+            <a href="recherche.html" class="btn">Voir les détails</a>
           </div>
         </article>
       </template>
@@ -254,7 +160,7 @@
                 </span>
               </a>
               <p>Le colis voyage autrement. Une plateforme de confiance qui connecte voyageurs et expéditeurs.</p>
-              <small>Démonstration locale · Aucune transaction réelle</small>
+              <small>Projet universitaire · Paiements simulés</small>
             </div>
             <div class="footer-column">
               <strong>Weight’Aty</strong>
@@ -287,6 +193,6 @@
         <button id="dialog-confirm" class="btn">Confirmer</button>
       </div>
     </dialog>
-    <noscript>Le contenu est écrit directement en HTML. Activez JavaScript pour les interactions de démonstration.</noscript>
+    <noscript>Le contenu est écrit directement en HTML. Activez JavaScript pour les interactions.</noscript>
   </body>
 </html>

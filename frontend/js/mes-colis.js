@@ -14,7 +14,8 @@ WAT.dom.run(async function () {
     const links = row.querySelectorAll('a');
     links[0].href = 'colis-details.html?id=' + encodeURIComponent(parcel.id);
     links[1].href = 'colis.html?parcel=' + encodeURIComponent(parcel.id);
-    links[1].hidden = parcel.status !== 'Brouillon';
+    if (parcel.status === 'Prêt') links[1].href = 'recherche.html?parcel=' + encodeURIComponent(parcel.id);
+    links[1].hidden = !['Brouillon', 'Prêt'].includes(parcel.status);
     body.append(row);
   });
   document.getElementById('list-empty').hidden = parcels.length !== 0;

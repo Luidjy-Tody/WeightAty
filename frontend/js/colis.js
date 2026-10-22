@@ -7,8 +7,8 @@ WAT.dom.run(async function () {
   const tripId = d.params.get('trip') || draft?.tripId;
   const trip = tripId ? await WAT.services.getTrip(tripId) : null;
   if (!trip) return d.error('Choisissez un trajet avant de renseigner votre colis.');
-  if (resume && (!draft || draft.status !== 'Brouillon')) return d.error('Ce brouillon ne peut plus être modifié.');
-  const parcel = draft?.tripId === trip.id && draft.status === 'Brouillon' ? draft : {};
+  if (resume && (!draft || !['Brouillon', 'Prêt'].includes(draft.status))) return d.error('Ce brouillon ne peut plus être modifié.');
+  const parcel = draft && (resume || draft.tripId === trip.id) && ['Brouillon', 'Prêt'].includes(draft.status) ? draft : {};
   d.fill(form, parcel);
   form.elements.weight.max = trip.capacity;
   d.text('#f-weight-hint', 'Maximum ' + d.number(trip.capacity) + ' kg');
@@ -87,7 +87,6 @@ WAT.dom.run(async function () {
     if (!d.errors(form, errors)) return;
     d.busy(form.querySelector('[type="submit"]'), async function () {
       await WAT.services.saveDraft(data);
-      if (!WAT.store.isPersistent()) throw new Error('Le stockage local est indisponible. Autorisez-le pour continuer entre les pages.');
       window.location.href = 'demande-transport.html';
     });
   };

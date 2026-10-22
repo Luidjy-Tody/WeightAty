@@ -4,16 +4,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#087c63">
-    <meta name="description" content="Weight’Aty — Démonstration frontend de transport de colis.">
+    <meta name="description" content="Weight’Aty — Plateforme universitaire de transport de colis.">
     <title>Envoyer une demande — Weight’Aty</title>
     <link rel="icon" href="../assets/icons/logo.svg" type="image/svg+xml">
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../css/components.css">
     <link rel="stylesheet" href="../css/pages.css">
     <script src="../js/app.js" defer></script>
+    <script src="../js/services/api.js" defer></script>
     <script src="../js/validation.js" defer></script>
-    <script src="../js/mock/data.js" defer></script>
-    <script src="../js/services/demo.js" defer></script>
+    <script src="../js/services/page-utils.js" defer></script>
     <script src="../js/demande-transport.js" defer></script>
   </head>
   <body data-page="demande-transport">
@@ -41,12 +41,12 @@
           <div class="account-nav">
             <a class="icon-button" href="notifications.html" aria-label="2 notifications non lues">
               <img src="../assets/icons/icone-dbf88ee5d6.svg" alt="" aria-hidden="true" class="icon">
-              <span class="badge-count">2</span>
+              <span class="badge-count" hidden>0</span>
             </a>
-            <a href="profil.html" aria-label="Profil de démonstration de Marie">
-              <span class="avatar" aria-hidden="true">MN</span>
+            <a href="profil.html" aria-label="Profil utilisateur">
+              <span class="avatar" aria-hidden="true"></span>
             </a>
-            <span class="demo-label">Profil démo</span>
+            <span class="demo-label">Mon compte</span>
           </div>
         </div>
       </header>
@@ -64,7 +64,7 @@
             <div>
               <p class="eyebrow">Étape 2 : Vérification</p>
               <h1>Envoyer une demande</h1>
-              <p data-request-intro="">Vérifiez les informations avant de simuler votre demande pour Jean M..</p>
+              <p data-request-intro="">Vérifiez les informations avant de envoyer votre demande pour Jean M..</p>
             </div>
           </div>
           <div class="split">
@@ -97,17 +97,17 @@
               <p class="space-top" data-parcel-description="">Vêtements et livres dans un petit carton.</p>
               <div id="send-result" class="request-banner">
                 <h2>Récapitulatif de la demande</h2>
-                <p data-request-summary="">La démonstration associera ce colis au trajet Maurice → Paris de Jean M., prévu le 12 novembre 2026.</p>
+                <p data-request-summary="">Votre demande associera ce colis au trajet Maurice → Paris de Jean M., prévu le 12 novembre 2026.</p>
                 <div class="notice ">
                   <img src="../assets/icons/icone-33f8b5d0f2.svg" alt="" aria-hidden="true" class="icon">
-                  <span>L’envoi est simulé localement : aucun voyageur n’est réellement contacté.</span>
+                  <span>La demande sera transmise au compte du voyageur.</span>
                 </div>
-                <button id="send-request" class="btn full space-top">Simuler l’envoi de la demande <img src="../assets/icons/icone-8853a6ca31.svg" alt="" aria-hidden="true" class="icon">
+                <button id="send-request" class="btn full space-top">Envoyer de la demande <img src="../assets/icons/icone-8853a6ca31.svg" alt="" aria-hidden="true" class="icon">
                 </button>
                 <p hidden="" data-send-error="" class="error"></p>
               </div>
               <div id="send-success" hidden="" class="request-banner">
-                <h2>Demande simulée avec succès</h2>
+                <h2>Demande envoyée avec succès</h2>
                 <p>Aucun voyageur n’a été réellement contacté. Retrouvez le colis et la demande dans votre espace.</p>
                 <a href="mes-demandes.html" data-created-request="" class="btn">Consulter la demande</a>
                 <a href="mes-demandes.html" class="btn secondary">Voir mes demandes</a>
@@ -162,7 +162,7 @@
                 </span>
               </a>
               <p>Le colis voyage autrement. Une plateforme de confiance qui connecte voyageurs et expéditeurs.</p>
-              <small>Démonstration locale · Aucune transaction réelle</small>
+              <small>Projet universitaire · Paiements simulés</small>
             </div>
             <div class="footer-column">
               <strong>Weight’Aty</strong>
@@ -195,6 +195,6 @@
         <button id="dialog-confirm" class="btn">Confirmer</button>
       </div>
     </dialog>
-    <noscript>Le contenu est écrit directement en HTML. Activez JavaScript pour les interactions de démonstration.</noscript>
+    <noscript>Le contenu est écrit directement en HTML. Activez JavaScript pour les interactions.</noscript>
   </body>
 </html>

@@ -3,6 +3,7 @@ WAT.dom.run(async function () {
   const d = WAT.dom;
   const user = await WAT.services.getUser();
   if (!user) return void (window.location.href = 'connexion.html');
+  document.getElementById('admin-link').hidden = !user.admin;
   const parcels = await WAT.services.getParcels();
   const requests = await WAT.services.getRequests();
   const trips = await WAT.services.getMyTrips();
@@ -13,7 +14,7 @@ WAT.dom.run(async function () {
   d.text('[data-greeting]', 'Bonjour ' + user.firstName);
   const counts = [parcels.length, active, trips.filter(function (t) { return t.status === 'Publié'; }).length, unread];
   document.querySelectorAll('.stat strong').forEach(function (element, index) { element.textContent = counts[index]; });
-  const labels = [parcels.length + ' colis', active + ' en cours', upcoming.length + ' à venir', 'Profil de démonstration', 'Espace voyageur', unread + ' non lues'];
+  const labels = [parcels.length + ' colis', active + ' en cours', upcoming.length + ' à venir', 'Mon profil', 'Espace voyageur', unread + ' non lues'];
   document.querySelectorAll('.account-links small').forEach(function (element, index) { element.textContent = labels[index]; });
   document.getElementById('next-trip').hidden = upcoming.length === 0;
   document.getElementById('no-next-trip').hidden = upcoming.length !== 0;

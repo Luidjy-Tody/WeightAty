@@ -4,16 +4,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#087c63">
-    <meta name="description" content="Weight’Aty — Démonstration frontend de transport de colis.">
+    <meta name="description" content="Weight’Aty — Plateforme universitaire de transport de colis.">
     <title>Informations de votre colis — Weight’Aty</title>
     <link rel="icon" href="../assets/icons/logo.svg" type="image/svg+xml">
     <link rel="stylesheet" href="../css/global.css">
     <link rel="stylesheet" href="../css/components.css">
     <link rel="stylesheet" href="../css/pages.css">
     <script src="../js/app.js" defer></script>
+    <script src="../js/services/api.js" defer></script>
     <script src="../js/validation.js" defer></script>
-    <script src="../js/mock/data.js" defer></script>
-    <script src="../js/services/demo.js" defer></script>
+    <script src="../js/services/page-utils.js" defer></script>
     <script src="../js/colis.js" defer></script>
   </head>
   <body data-page="colis">
@@ -41,12 +41,12 @@
           <div class="account-nav">
             <a class="icon-button" href="notifications.html" aria-label="2 notifications non lues">
               <img src="../assets/icons/icone-dbf88ee5d6.svg" alt="" aria-hidden="true" class="icon">
-              <span class="badge-count">2</span>
+              <span class="badge-count" hidden>0</span>
             </a>
-            <a href="profil.html" aria-label="Profil de démonstration de Marie">
-              <span class="avatar" aria-hidden="true">MN</span>
+            <a href="profil.html" aria-label="Profil utilisateur">
+              <span class="avatar" aria-hidden="true"></span>
             </a>
-            <span class="demo-label">Profil démo</span>
+            <span class="demo-label">Mon compte</span>
           </div>
         </div>
       </header>
@@ -68,7 +68,7 @@
             </div>
           </div>
           <div class="split">
-            <form id="parcel-form" class="card" novalidate>
+            <form method="post" id="parcel-form" class="card" novalidate>
               <div data-form-error class="notice error space-bottom" hidden role="alert"></div>
               <div class="field">
                 <label for="f-type">Type de colis <span class="required">*</span>
@@ -103,7 +103,7 @@
                   <label for="f-value">Valeur déclarée <span class="required">*</span>
                   </label>
                   <div class="input-unit">
-                    <input id="f-value" name="value" aria-describedby="f-value-error f-value-hint" aria-required="true" min="0.01" step="0.01" type="number" value="" placeholder="">
+                    <input id="f-value" name="value" aria-describedby="f-value-error f-value-hint" aria-required="true" min="0" step="0.01" type="number" value="" placeholder="">
                     <span>MUR</span>
                   </div>
                   <p id="f-value-hint" class="hint">En roupies mauriciennes</p>
@@ -159,12 +159,12 @@
               </div>
               <div class="notice ">
                 <img src="../assets/icons/icone-33f8b5d0f2.svg" alt="" aria-hidden="true" class="icon">
-                <span>Démonstration locale : la validation prépare le colis, sans envoyer de demande réelle.</span>
+                <span>Cette étape enregistre votre colis. La demande sera envoyée après vérification.</span>
               </div>
               <div class="actions space-top">
                 <button type="submit" class="btn">Valider les informations <img src="../assets/icons/icone-8853a6ca31.svg" alt="" aria-hidden="true" class="icon">
                 </button>
-                <a href="trajet-details.html?id=TRA-1" class="btn secondary" data-back-trip="">Retour au trajet</a>
+                <a href="recherche.html" class="btn secondary" data-back-trip="">Retour au trajet</a>
               </div>
             </form>
             <aside class="card">
@@ -215,7 +215,7 @@
                 </span>
               </a>
               <p>Le colis voyage autrement. Une plateforme de confiance qui connecte voyageurs et expéditeurs.</p>
-              <small>Démonstration locale · Aucune transaction réelle</small>
+              <small>Projet universitaire · Paiements simulés</small>
             </div>
             <div class="footer-column">
               <strong>Weight’Aty</strong>
@@ -248,6 +248,6 @@
         <button id="dialog-confirm" class="btn">Confirmer</button>
       </div>
     </dialog>
-    <noscript>Le contenu est écrit directement en HTML. Activez JavaScript pour les interactions de démonstration.</noscript>
+    <noscript>Le contenu est écrit directement en HTML. Activez JavaScript pour les interactions.</noscript>
   </body>
 </html>

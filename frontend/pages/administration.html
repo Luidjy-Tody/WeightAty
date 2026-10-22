@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#087c63">
+    <meta name="description" content="Weight’Aty — Plateforme universitaire de transport de colis.">
+    <title>Administration — Weight’Aty</title>
+    <link rel="icon" href="../assets/icons/logo.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/pages.css">
+    <script src="../js/app.js" defer></script>
+    <script src="../js/services/api.js" defer></script>
+    <script src="../js/validation.js" defer></script>
+    <script src="../js/services/page-utils.js" defer></script>
+    <script src="../js/administration.js" defer></script>
+  </head>
+  <body data-page="administration">
+    <!-- LIEN VERS LE CONTENU -->
+    <a class="skip-link" href="#main">Aller au contenu</a>
+    <!-- BARRE DE NAVIGATION -->
+    <div id="header">
+      <header class="site-header">
+        <div class="container header-inner">
+          <a href="../index.html" class="brand">
+            <img src="../assets/icons/logo.svg" alt="">
+            <span>Weight<em>’Aty</em>
+            </span>
+          </a>
+          <button class="icon-button menu-toggle" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="main-nav">
+            <img src="../assets/icons/icone-460999eb13.svg" alt="" aria-hidden="true" class="icon">
+          </button>
+          <nav id="main-nav" class="main-nav" aria-label="Navigation principale">
+            <a href="../index.html">Accueil</a>
+            <a href="recherche.html">Rechercher un trajet</a>
+            <a href="publier-trajet.html">Publier un trajet</a>
+            <a href="mes-demandes.html">Mes demandes</a>
+            <a href="mes-trajets.html">Mes trajets</a>
+          </nav>
+          <div class="account-nav">
+            <a class="icon-button" href="notifications.html" aria-label="2 notifications non lues">
+              <img src="../assets/icons/icone-dbf88ee5d6.svg" alt="" aria-hidden="true" class="icon">
+              <span class="badge-count" hidden>0</span>
+            </a>
+            <a href="profil.html" aria-label="Profil utilisateur">
+              <span class="avatar" aria-hidden="true"></span>
+            </a>
+            <span class="demo-label">Mon compte</span>
+          </div>
+        </div>
+      </header>
+    </div>
+    <!-- CONTENU DE LA PAGE -->
+    <main id="main" tabindex="-1" class="container">
+      <h1>Administration</h1><p id="loading" role="status">Vérification de vos droits…</p>
+      <p id="admin-stats"></p>
+      <section class="card"><h2>Utilisateurs</h2><div class="table-wrap"><table><thead><tr><th>Nom</th><th>E-mail</th><th>Statut</th><th>Action</th></tr></thead><tbody id="admin-users">
+                <!-- DONNÉES CHARGÉES DEPUIS LE SERVEUR -->
+              </tbody></table></div></section>
+      <section class="card"><h2>Trajets</h2><div class="table-wrap"><table><thead><tr><th>Trajet</th><th>Statut</th><th>Action</th></tr></thead><tbody id="admin-trips">
+                <!-- DONNÉES CHARGÉES DEPUIS LE SERVEUR -->
+              </tbody></table></div></section>
+      <section class="card"><h2>Demandes</h2><div class="table-wrap"><table><thead><tr><th>Demande</th><th>Colis</th><th>Trajet</th><th>Statut</th><th>Action</th></tr></thead><tbody id="admin-requests">
+                <!-- DONNÉES CHARGÉES DEPUIS LE SERVEUR -->
+              </tbody></table></div></section>
+      <section class="card"><h2>Transactions de démonstration</h2><ul id="admin-payments"></ul></section>
+      <section class="card"><h2>Signalements</h2><div class="table-wrap"><table><thead><tr><th>Demande</th><th>Motif</th><th>Statut</th><th>Action</th></tr></thead><tbody id="admin-reports">
+                <!-- DONNÉES CHARGÉES DEPUIS LE SERVEUR -->
+              </tbody></table></div></section>
+      <template id="admin-request-row"><tr><td></td><td></td><td></td><td></td><td><button class="btn secondary">Annuler</button></td></tr></template>
+      <template id="admin-user-row"><tr><td></td><td></td><td></td><td><button class="btn secondary"></button></td></tr></template>
+      <template id="admin-trip-row"><tr><td></td><td></td><td><button class="btn secondary">Annuler</button></td></tr></template>
+      <template id="admin-report-row"><tr><td></td><td></td><td></td><td><button class="btn secondary">Résoudre</button></td></tr></template>
+    </main>
+    <!-- PIED DE PAGE -->
+    <div id="footer">
+      <footer class="site-footer">
+        <div class="container">
+          <div class="footer-grid">
+            <div>
+              <a href="../index.html" class="brand">
+                <img src="../assets/icons/logo.svg" alt="">
+                <span>Weight<em>’Aty</em>
+                </span>
+              </a>
+              <p>Le colis voyage autrement. Une plateforme de confiance qui connecte voyageurs et expéditeurs.</p>
+              <small>Projet universitaire · Paiements simulés</small>
+            </div>
+            <div class="footer-column">
+              <strong>Weight’Aty</strong>
+              <a href="a-propos.html" class="">À propos</a>
+              <a href="contact.html" class="">Contact</a>
+              <a href="recherche.html" class="">Trouver un trajet</a>
+              <a href="dashboard.html" class="">Tableau de bord</a>
+            </div>
+            <div class="footer-column">
+              <strong>Informations</strong>
+              <a href="conditions.html" class="">Conditions d’utilisation</a>
+              <a href="confidentialite.html" class="">Politique de confidentialité</a>
+              <a href="aide.html" class="">Centre d’aide</a>
+              <a href="connexion.html" class="">Connexion / inscription</a>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <span>© 2026 Weight’Aty. Tous droits réservés.</span>
+            <span>Conçu pour rapprocher les destinations.</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+    <dialog id="confirmation" aria-labelledby="dialog-title">
+      <h2 id="dialog-title">Confirmer l’action</h2>
+      <p id="dialog-message"></p>
+      <div class="actions">
+        <button id="dialog-cancel" class="btn secondary">Retour</button>
+        <button id="dialog-confirm" class="btn">Confirmer</button>
+      </div>
+    </dialog>
+    <noscript>Le contenu est écrit directement en HTML. Activez JavaScript pour les interactions.</noscript>
+  </body>
+</html>
