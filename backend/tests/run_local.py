@@ -20,7 +20,7 @@ try:
   try:s=socket.create_connection(('127.0.0.1',3307),.2);s.close();break
   except OSError:time.sleep(.1)
  # PDO CLI applique les scripts, sans dépendre du client mysql non bloquant.
- for script in ['database/01_creation_weightaty_securisee.sql','database/migrations/04_finalisation.sql','database/migrations/04_finalisation.sql']:
+ for script in ['database/01_creation_weightaty_securisee.sql','database/migrations/04_finalisation.sql','database/migrations/04_finalisation.sql','database/migrations/05_validation_paiement.sql','database/migrations/05_validation_paiement.sql']:
   subprocess.run([php,'-r',"require 'backend/config/database.php'; db()->exec(file_get_contents($argv[1]));",script],cwd=repo,env={**env,'DB_DSN':env['DB_DSN'].replace('dbname=weightaty_db;','')},check=True)
  procs.append(subprocess.Popen([php,'-S','127.0.0.1:8001','backend/router.php'],cwd=repo,env=env,stdout=php_log,stderr=php_log,start_new_session=True))
  time.sleep(.5)

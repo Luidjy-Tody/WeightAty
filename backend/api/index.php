@@ -27,6 +27,8 @@ function dispatch(string $op, array $d): mixed {
         $email=mb_strtolower(text($d,'email',255)); need((bool)filter_var($email,FILTER_VALIDATE_EMAIL),'Adresse e-mail invalide.');
         $first=text($d,'firstName',100); $last=text($d,'lastName',100); $pass=text($d,'password',72);
         need(strlen($pass)>=8 && strlen($pass)<=72,'Le mot de passe doit contenir entre 8 et 72 octets.');
+        need(preg_match('/\p{L}/u',$pass)===1 && preg_match('/\d/',$pass)===1,'Le mot de passe doit contenir au moins une lettre et un chiffre.');
+        need(one('SELECT id FROM utilisateur WHERE email=?',[$email])===null,'Cette adresse e-mail est déjà utilisée.',409);
         query('INSERT INTO utilisateur(prenom,nom,email,mot_de_passe_hash) VALUES (?,?,?,?)',[$first,$last,$email,password_hash($pass,PASSWORD_DEFAULT)]);
         return ['id'=>(string)db()->lastInsertId()];
     }
@@ -158,7 +160,8 @@ function dispatch(string $op, array $d): mixed {
         if ($status==='acceptee') {
             need($r['trajet_statut']==='publie' && $r['date_depart']>=gmdate('Y-m-d') && $r['colis_statut']==='pret','Transport indisponible.',409);
             need(!one("SELECT id FROM demande_transport WHERE colis_id=? AND statut='acceptee'",[$r['colis_id']]),'Colis déjà réservé.',409);
-            need((float)$r['poids']<=capacity((int)$r['trajet_id']),'Capacité insuffisante.',409);
+            $left=capacity((int)$r['trajet_id']);
+            if ((float)$r['poids']>$left) {http_response_code(409);return ['message'=>capacityAlert($r,$left)];}
         }
         query('UPDATE demande_transport SET statut=?,date_reponse=UTC_TIMESTAMP(),date_annulation=? WHERE id=?',[$status,$status==='annulee'?gmdate('Y-m-d H:i:s'):null,$id]);
         notify((int)$r['expediteur_id'],$id,'Demande : '.$status);notify((int)$r['voyageur_id'],$id,'Demande : '.$status);audit($uid,'demande_'.$status,$id);return requestView(requestRow($id,$u));
@@ -173,11 +176,46 @@ function dispatch(string $op, array $d): mixed {
     case 'pay':
         need((getenv('PAYMENT_MODE')?:'simulation')==='simulation','Fournisseur de paiement non configuré.',503);
         $r=requestRow(ident($d['id']??null),$u);need($uid==$r['expediteur_id'],'Accès interdit.',403);
-        need($r['statut']==='acceptee' && $r['colis_statut']==='pret' && $r['trajet_statut']==='publie','Paiement indisponible.',409);
-        $q=quotePrice($r);query('INSERT IGNORE INTO paiement(demande_id,transport,frais) VALUES (?,?,?)',[$r['id'],$q['transport'],$q['fees']]);return ['ok'=>true,'mode'=>'simulation'];
+        need($r['statut']==='acceptee' && $r['colis_statut']==='pret' && $r['trajet_statut']==='publie','Paiement impossible : la demande doit être acceptée et le trajet encore publié.',409);
+        $p=one('SELECT * FROM paiement WHERE demande_id=?',[$r['id']]);
+        need(!$p || $p['statut']!=='valide','Cette demande a déjà été payée.',409);
+        need(!$p || $p['statut']!=='en_attente','Paiement déjà déclaré : en attente de la validation du voyageur.',409);
+        $q=quotePrice($r);$ref=text($d,'reference',100,false);$ref=$ref!=='' ? $ref : null;
+        if ($p) query("UPDATE paiement SET statut='en_attente',reference=?,transport=?,frais=?,date_creation=UTC_TIMESTAMP(),date_validation=NULL,motif_refus=NULL WHERE id=?",[$ref,$q['transport'],$q['fees'],$p['id']]);
+        else query("INSERT INTO paiement(demande_id,transport,frais,statut,reference,date_creation) VALUES (?,?,?,'en_attente',?,UTC_TIMESTAMP())",[$r['id'],$q['transport'],$q['fees'],$ref]);
+        notify((int)$r['voyageur_id'],(int)$r['id'],'Paiement déclaré par l’expéditeur ('.$q['total'].' MUR, simulation'.($ref!==null?', référence '.$ref:'').') : vérifiez la réception puis validez ou refusez.');
+        notify($uid,(int)$r['id'],'Paiement déclaré. En attente de la validation du voyageur.');
+        audit($uid,'paiement_declare',(int)$r['id']);
+        return ['ok'=>true,'mode'=>'simulation','status'=>'en_attente','total'=>$q['total'],'currency'=>$q['currency']];
+    case 'validatePayment':
+        $r=requestRow(ident($d['id']??null),$u);need($uid==$r['voyageur_id'],'Seul le voyageur valide le paiement.',403);
+        need($r['statut']==='acceptee' && $r['colis_statut']==='pret' && $r['trajet_statut']==='publie','Validation impossible : la demande n’est plus active.',409);
+        $p=one('SELECT * FROM paiement WHERE demande_id=?',[$r['id']]);need((bool)$p && $p['statut']==='en_attente','Aucun paiement en attente de validation.',409);
+        $left=capacity((int)$r['trajet_id']);
+        if ((float)$r['poids']>$left) {
+            // Pas d’exception : la transaction doit conserver le refus et les alertes.
+            $message=capacityAlert($r,$left);
+            query("UPDATE paiement SET statut='refuse',motif_refus=?,date_validation=UTC_TIMESTAMP() WHERE id=?",[$message,$p['id']]);
+            audit($uid,'paiement_refuse_capacite',(int)$r['id']);
+            http_response_code(409);return ['message'=>$message];
+        }
+        query("UPDATE paiement SET statut='valide',date_validation=UTC_TIMESTAMP(),motif_refus=NULL WHERE id=?",[$p['id']]);
+        $left=capacity((int)$r['trajet_id']);
+        notify((int)$r['expediteur_id'],(int)$r['id'],'Paiement validé par le voyageur : le transport de votre colis est confirmé.');
+        notify($uid,(int)$r['id'],'Paiement validé : '.kg((float)$r['poids']).' kg retirés de la capacité du trajet, il reste '.kg($left).' kg.');
+        audit($uid,'paiement_valide',(int)$r['id']);
+        return ['ok'=>true,'status'=>'valide','remaining'=>$left];
+    case 'rejectPayment':
+        $r=requestRow(ident($d['id']??null),$u);need($uid==$r['voyageur_id'],'Seul le voyageur peut refuser le paiement.',403);
+        $p=one('SELECT * FROM paiement WHERE demande_id=?',[$r['id']]);need((bool)$p && $p['statut']==='en_attente','Aucun paiement en attente de validation.',409);
+        $reason=text($d,'reason',500);
+        query("UPDATE paiement SET statut='refuse',motif_refus=?,date_validation=UTC_TIMESTAMP() WHERE id=?",[$reason,$p['id']]);
+        notify((int)$r['expediteur_id'],(int)$r['id'],'Paiement refusé par le voyageur : '.$reason.'. Vous pouvez payer à nouveau ou signaler un problème.');
+        audit($uid,'paiement_refuse',(int)$r['id']);
+        return ['ok'=>true,'status'=>'refuse'];
     case 'pickup':
         $r=requestRow(ident($d['id']??null),$u);need($uid==$r['voyageur_id'],'Accès interdit.',403);
-        need($r['statut']==='acceptee' && $r['colis_statut']==='pret' && $r['trajet_statut']==='publie' && (bool)one('SELECT id FROM paiement WHERE demande_id=?',[$r['id']]),'Prise en charge impossible avant acceptation et paiement de démonstration.',409);
+        need($r['statut']==='acceptee' && $r['colis_statut']==='pret' && $r['trajet_statut']==='publie' && (bool)one("SELECT id FROM paiement WHERE demande_id=? AND statut='valide'",[$r['id']]),'Prise en charge impossible avant acceptation et validation du paiement.',409);
         query('INSERT INTO suivi_transport(demande_id,date_prise_en_charge) VALUES (?,UTC_TIMESTAMP())',[$r['id']]);query("UPDATE colis SET statut='pris_en_charge' WHERE id=?",[$r['colis_id']]);
         notify((int)$r['expediteur_id'],(int)$r['id'],'Colis pris en charge.');return ['ok'=>true];
     case 'deliver':
@@ -194,8 +232,8 @@ function dispatch(string $op, array $d): mixed {
         $r=requestRow(ident($d['id']??null),$u);query('INSERT INTO signalement(auteur_id,demande_id,motif) VALUES (?,?,?)',[$uid,$r['id'],text($d,'reason',2000)]);return ['ok'=>true];
     case 'admin':
         admin($u);return ['users'=>rows('SELECT id,prenom,nom,email,statut FROM utilisateur'), 'trips'=>rows('SELECT id,depart,destination,statut FROM trajet'),
-          'requests'=>rows('SELECT id,colis_id,trajet_id,statut FROM demande_transport'),'payments'=>rows('SELECT p.*,r.date_creation date_remboursement FROM paiement p LEFT JOIN remboursement r ON r.paiement_id=p.id'),'reports'=>rows('SELECT * FROM signalement'),
-          'stats'=>one("SELECT (SELECT COUNT(*) FROM utilisateur) utilisateurs,(SELECT COUNT(*) FROM trajet) trajets,(SELECT COUNT(*) FROM demande_transport) demandes,(SELECT COALESCE(SUM(transport+frais),0) FROM paiement p WHERE NOT EXISTS (SELECT 1 FROM remboursement r WHERE r.paiement_id=p.id)) total_simule")];
+          'requests'=>rows('SELECT id,colis_id,trajet_id,statut FROM demande_transport'),'payments'=>rows('SELECT p.*,r.date_creation date_remboursement FROM paiement p LEFT JOIN remboursement r ON r.paiement_id=p.id'),'reports'=>rows("SELECT s.id,s.demande_id,s.motif,s.statut,s.date_creation,u.prenom,u.nom,u.email,t.depart,t.destination FROM signalement s JOIN utilisateur u ON u.id=s.auteur_id JOIN demande_transport d ON d.id=s.demande_id JOIN trajet t ON t.id=d.trajet_id ORDER BY (s.statut='ouvert') DESC,s.id DESC"),
+          'stats'=>one("SELECT (SELECT COUNT(*) FROM utilisateur) utilisateurs,(SELECT COUNT(*) FROM trajet) trajets,(SELECT COUNT(*) FROM demande_transport) demandes,(SELECT COUNT(*) FROM signalement WHERE statut='ouvert') signalements_ouverts,(SELECT COUNT(*) FROM signalement) signalements_total,(SELECT COUNT(*) FROM paiement WHERE statut='en_attente') paiements_en_attente,(SELECT COALESCE(SUM(transport+frais),0) FROM paiement p WHERE p.statut='valide' AND NOT EXISTS (SELECT 1 FROM remboursement r WHERE r.paiement_id=p.id)) total_simule")];
     case 'adminAction':
         admin($u);$id=ident($d['id']??null);$action=text($d,'action',50);
         if ($action==='suspend' || $action==='activate') {need($id!==$uid,'Vous ne pouvez pas suspendre votre propre compte.');need((bool)one('SELECT id FROM utilisateur WHERE id=?',[$id]),'Compte introuvable.',404);query('UPDATE utilisateur SET statut=? WHERE id=?',[$action==='suspend'?'suspendu':'actif',$id]);query('DELETE FROM sessions_actives WHERE utilisateur_id=?',[$id]);}
@@ -206,7 +244,7 @@ function dispatch(string $op, array $d): mixed {
             notify((int)$r['expediteur_id'],$id,'Demande annulée par l’administration.');notify((int)$r['voyageur_id'],$id,'Demande annulée par l’administration.');
         }
         elseif ($action==='cancelTrip') return cancelTrip($id,$u,true);
-        elseif ($action==='resolve') query("UPDATE signalement SET statut='resolu' WHERE id=?",[$id]);
+        elseif ($action==='resolve') {$s=one('SELECT statut FROM signalement WHERE id=?',[$id]);need((bool)$s,'Signalement introuvable.',404);need($s['statut']==='ouvert','Ce signalement est déjà résolu.',409);query("UPDATE signalement SET statut='resolu' WHERE id=?",[$id]);}
         else need(false,'Action inconnue.');audit($uid,'admin_'.$action,$id);return ['ok'=>true];
     default: throw new DomainException('Opération inconnue.',404);
     }

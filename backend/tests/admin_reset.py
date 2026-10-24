@@ -5,6 +5,10 @@ from pathlib import Path
 def verify(mod, result, outbox):
     admin=mod.Client();admin.login(result['emails'][0])
     snapshot=admin.get('admin');assert int(snapshot['stats']['utilisateurs'])>=3
+    assert 'signalements_ouverts' in snapshot['stats'] and 'paiements_en_attente' in snapshot['stats'] and all('prenom' in x and 'depart' in x for x in snapshot['reports'])
+    opened=[x for x in snapshot['reports'] if x['statut']=='ouvert']
+    assert opened
+    admin.post('adminAction',{'action':'resolve','id':opened[0]['id']});admin.post('adminAction',{'action':'resolve','id':opened[0]['id']},409)
     old=mod.Client();old.login(result['emails'][1])
     admin.post('adminAction',{'action':'suspend','id':result['ids'][1]})
     old.get('myTrips',401)

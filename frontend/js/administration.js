@@ -2,7 +2,13 @@
 WAT.dom.run(async function () {
   const data = await WAT.api('admin');
   document.getElementById('loading').hidden = true;
-  WAT.dom.text('#admin-stats', Object.entries(data.stats).map(([key, value]) => key + ' : ' + value).join(' · '));
+  const statLabels = [['utilisateurs', 'Utilisateurs'], ['trajets', 'Trajets'], ['demandes', 'Demandes'], ['signalements_ouverts', 'Signalements ouverts'], ['signalements_total', 'Signalements au total'], ['paiements_en_attente', 'Paiements en attente'], ['total_simule', 'Paiements simulés (MUR)']];
+  statLabels.forEach(([key, label]) => {
+    const card = document.getElementById('admin-stat-card').content.firstElementChild.cloneNode(true);
+    card.querySelector('strong').textContent = WAT.dom.number(data.stats[key]);
+    card.querySelector('span').textContent = label;
+    document.getElementById('admin-stats').append(card);
+  });
   function action(button, op, id) {
     button.onclick = async function () {
       if (!await WAT.dom.confirm(button.textContent + ' ?')) return;
@@ -22,10 +28,28 @@ WAT.dom.run(async function () {
     const button = row('admin-trip-row', [t.depart + ' → ' + t.destination, t.statut], 'admin-trips');
     button.hidden = t.statut !== 'publie'; action(button, 'cancelTrip', t.id);
   });
-  data.reports.forEach(r => {
-    const button = row('admin-report-row', [r.demande_id, r.motif, r.statut], 'admin-reports');
-    button.hidden = r.statut !== 'ouvert'; action(button, 'resolve', r.id);
-  });
+  function showReports() {
+    const filter = document.getElementById('report-filter').value;
+    const body = document.getElementById('admin-reports'); body.replaceChildren();
+    const shown = data.reports.filter(r => filter === 'tous' || r.statut === filter);
+    shown.forEach(r => {
+      const item = document.getElementById('admin-report-row').content.firstElementChild.cloneNode(true);
+      const cells = item.querySelectorAll('td');
+      cells[0].textContent = '#' + r.demande_id + ' · ' + r.depart + ' → ' + r.destination;
+      cells[1].textContent = r.prenom + ' ' + r.nom + ' (' + r.email + ')';
+      cells[2].textContent = r.date_creation + ' UTC';
+      cells[3].textContent = r.motif;
+      const badge = item.querySelector('.status');
+      badge.textContent = r.statut === 'ouvert' ? 'Ouvert' : 'Résolu';
+      badge.classList.add(r.statut === 'ouvert' ? 'pending' : 'success');
+      const button = item.querySelector('button');
+      button.hidden = r.statut !== 'ouvert'; action(button, 'resolve', r.id);
+      body.append(item);
+    });
+    WAT.dom.text('#reports-count', shown.length ? shown.length + ' signalement(s) affiché(s).' : 'Aucun signalement à afficher.');
+  }
+  document.getElementById('report-filter').onchange = showReports;
+  showReports();
   data.requests.forEach(r => {
     const button = row('admin-request-row', [r.id, r.colis_id, r.trajet_id, r.statut], 'admin-requests');
     button.hidden = !['en_attente', 'acceptee'].includes(r.statut); action(button, 'cancelRequest', r.id);

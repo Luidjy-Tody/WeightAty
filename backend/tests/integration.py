@@ -30,6 +30,7 @@ def suite():
         ids.append(client.post('register',{'firstName':'Test','lastName':str(index),'email':email,'password':'Test-valid-2026!'})['id'])
         client.login(email)
     a.post('register',{'firstName':'Test','lastName':'Dup','email':emails[0],'password':'Test-valid-2026!'},409)
+    a.post('register',{'firstName':'Test','lastName':'Faible','email':f'faible-{suffix}@example.test','password':'abcdefgh'},422)
     a.post('profile',{'firstName':'Nouveau'});assert a.get('user')['firstName']=='Nouveau'
     assert 'email' not in b.get('user&id='+ids[0])
     a.get('admin',403);a.post('profile',{'firstName':'CSRF'},403,False)
@@ -53,24 +54,37 @@ def suite():
     b.post('updateRequest',{'id':r1['id'],'status':'Acceptée'},403)
     # Deux sessions du même voyageur : les requêtes ne sont pas sérialisées par le verrou PHP de session.
     a2=Client();a2.login(emails[0])
-    def accept(pair):
+    a.post('updateRequest',{'id':r1['id'],'status':'Acceptée'});a.post('updateRequest',{'id':r2['id'],'status':'Acceptée'})
+    assert a.get('trip&id='+t['id'])['capacity']==8  # kilos non retirés avant la validation du paiement
+    b.post('pay',{'id':r1['id'],'reference':'REF-B'});c.post('pay',{'id':r2['id'],'reference':'REF-C'})
+    a.post('pickup',{'id':r1['id']},409)  # paiement seulement déclaré
+    b.post('validatePayment',{'id':r1['id']},403)
+    def validate(pair):
         client,r=pair
-        try: return client.post('updateRequest',{'id':r['id'],'status':'Acceptée'},200)
+        try: return client.post('validatePayment',{'id':r['id']},200)
         except AssertionError as exc:
             if "409" in str(exc) and 'Capacité' in str(exc):return None
             raise
-    with concurrent.futures.ThreadPoolExecutor() as pool:results=list(pool.map(accept,[(a,r1),(a2,r2)]))
+    with concurrent.futures.ThreadPoolExecutor() as pool:results=list(pool.map(validate,[(a,r1),(a2,r2)]))
     assert sum(x is not None for x in results)==1,results
     assert a.get('trip&id='+t['id'])['capacity']==3
     winner = (b,r1,p1) if results[0] else (c,r2,p2)
     loser=(c,r2,p2) if results[0] else (b,r1,p1)
     sender,r,p=winner
+    # Alerte de capacité : colis de 5 kg pour 3 kg restants, prévenus des deux côtés, paiement refusé.
+    assert any('Capacité insuffisante' in n['text'] and '3 kg' in n['text'] for n in a.get('notifications'))
+    assert any('Capacité insuffisante' in n['text'] for n in loser[0].get('notifications'))
+    assert loser[0].get('transport&id='+loser[1]['id'])['payment']['statut']=='refuse'
+    loser[0].post('pay',{'id':loser[1]['id']});loser[0].post('pay',{'id':loser[1]['id']},409)
+    loser[0].post('rejectPayment',{'id':loser[1]['id'],'reason':'Non'},403)
+    a.post('rejectPayment',{'id':loser[1]['id'],'reason':'Non reçu'});a.post('rejectPayment',{'id':loser[1]['id'],'reason':'Encore'},409)
+    assert loser[0].get('transport&id='+loser[1]['id'])['payment']['motif_refus']=='Non reçu'
     sender.post('review',{'id':r['id'],'note':5,'comment':'T'},409)
-    a.post('pickup',{'id':r['id']},409)
+    a.post('validatePayment',{'id':r['id']},409)
     sender.post('message',{'id':r['id'],'content':'Bonjour <script>test</script>'})
     assert a.get('transport&id='+r['id'])['messages'][0]['contenu']=='Bonjour <script>test</script>'
-    sender.post('pay',{'id':r['id']});sender.post('pay',{'id':r['id']})
-    assert sender.get('transport&id='+r['id'])['payment']['mode']=='simulation'
+    sender.post('pay',{'id':r['id']},409)
+    assert sender.get('transport&id='+r['id'])['payment']['statut']=='valide'
     # Une annulation après prise en charge sera refusée ci-dessous.
     a.post('pickup',{'id':r['id']});sender.post('updateRequest',{'id':r['id'],'status':'Annulée'},409);a.post('cancelTrip',{'id':t['id']},409)
     a.post('deliver',{'id':r['id']},403);sender.post('deliver',{'id':r['id']})

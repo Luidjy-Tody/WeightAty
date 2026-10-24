@@ -8,6 +8,7 @@ accessForm.addEventListener('submit', function (event) {
     const errors = {};
     if (accessPage !== 'reinitialisation' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email || '')) errors.email = 'Saisissez une adresse e-mail valide.';
     if (accessPage !== 'mot-de-passe-oublie' && (data.password || '').length < 8) errors.password = 'Utilisez au moins 8 caractères.';
+    else if (accessPage === 'inscription' && !(/\p{L}/u.test(data.password) && /\d/.test(data.password))) errors.password = 'Le mot de passe doit contenir au moins une lettre et un chiffre.';
     if (accessPage === 'inscription') {
       if (!data.firstName.trim()) errors.firstName = 'Indiquez votre prénom.';
       if (!data.lastName.trim()) errors.lastName = 'Indiquez votre nom.';
@@ -17,12 +18,18 @@ accessForm.addEventListener('submit', function (event) {
     if (accessPage === 'inscription' && data.password !== data.confirmPassword) throw new Error('Les mots de passe ne correspondent pas.');
     const op = { connexion: 'login', inscription: 'register', 'mot-de-passe-oublie': 'forgot', reinitialisation: 'reset' }[accessPage];
     if (op === 'reset') data.token = new URLSearchParams(window.location.search).get('token');
-    const result = await post(op, data);
+    let result;
+    try { result = await post(op, data); }
+    catch (error) {
+      if (op === 'register' && /déjà utilisée/.test(error.message)) { WAT.dom.errors(accessForm, { email: error.message }); return; }
+      throw error;
+    }
     accessForm.querySelectorAll('[type="password"]').forEach(input => { input.value = ''; });
     if (op === 'login') { WAT.session = result; window.location.href = 'dashboard.html'; }
     else {
       const box = document.getElementById('auth-result'); box.hidden = false;
-      box.textContent = result.message || (op === 'register' ? 'Compte créé. Vous pouvez vous connecter.' : 'Mot de passe modifié. Vous pouvez vous connecter.');
+      box.textContent = result.message || (op === 'register' ? 'Compte créé. Redirection vers la connexion…' : 'Mot de passe modifié. Vous pouvez vous connecter.');
+      if (op === 'register') setTimeout(() => { window.location.href = 'connexion.html'; }, 2000);
     }
   });
 });

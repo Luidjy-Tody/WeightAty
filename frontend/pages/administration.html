@@ -54,7 +54,7 @@
     <!-- CONTENU DE LA PAGE -->
     <main id="main" tabindex="-1" class="container">
       <h1>Administration</h1><p id="loading" role="status">Vérification de vos droits…</p>
-      <p id="admin-stats"></p>
+      <section class="stat-grid space-bottom" id="admin-stats" aria-label="Statistiques de la plateforme"></section>
       <section class="card"><h2>Utilisateurs</h2><div class="table-wrap"><table><thead><tr><th>Nom</th><th>E-mail</th><th>Statut</th><th>Action</th></tr></thead><tbody id="admin-users">
                 <!-- DONNÉES CHARGÉES DEPUIS LE SERVEUR -->
               </tbody></table></div></section>
@@ -65,13 +65,18 @@
                 <!-- DONNÉES CHARGÉES DEPUIS LE SERVEUR -->
               </tbody></table></div></section>
       <section class="card"><h2>Transactions de démonstration</h2><ul id="admin-payments"></ul></section>
-      <section class="card"><h2>Signalements</h2><div class="table-wrap"><table><thead><tr><th>Demande</th><th>Motif</th><th>Statut</th><th>Action</th></tr></thead><tbody id="admin-reports">
+      <section class="card"><div class="between"><h2>Signalements</h2>
+        <div class="row"><label for="report-filter">Afficher</label>
+          <select id="report-filter"><option value="ouvert">Ouverts</option><option value="resolu">Résolus</option><option value="tous">Tous</option></select></div></div>
+        <p id="reports-count" role="status"></p>
+        <div class="table-wrap"><table><thead><tr><th>Demande</th><th>Auteur</th><th>Date</th><th>Motif</th><th>Statut</th><th>Action</th></tr></thead><tbody id="admin-reports">
                 <!-- DONNÉES CHARGÉES DEPUIS LE SERVEUR -->
               </tbody></table></div></section>
       <template id="admin-request-row"><tr><td></td><td></td><td></td><td></td><td><button class="btn secondary">Annuler</button></td></tr></template>
       <template id="admin-user-row"><tr><td></td><td></td><td></td><td><button class="btn secondary"></button></td></tr></template>
       <template id="admin-trip-row"><tr><td></td><td></td><td><button class="btn secondary">Annuler</button></td></tr></template>
-      <template id="admin-report-row"><tr><td></td><td></td><td></td><td><button class="btn secondary">Résoudre</button></td></tr></template>
+      <template id="admin-report-row"><tr><td></td><td></td><td></td><td></td><td><span class="status"></span></td><td><button class="btn secondary">Résoudre</button></td></tr></template>
+      <template id="admin-stat-card"><div class="card stat"><strong></strong><span></span></div></template>
     </main>
     <!-- PIED DE PAGE -->
     <div id="footer">

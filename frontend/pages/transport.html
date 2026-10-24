@@ -60,12 +60,24 @@
         <h2 id="transport-title">Suivi du colis</h2>
         <p id="transport-status"></p><p id="transport-dates"></p>
         <p id="transport-price"></p>
+        <div id="payment-summary" class="notice" role="status" hidden></div>
         <p>Paiement de démonstration : aucun débit bancaire. Tarif de démonstration, sans valeur contractuelle.</p>
+        <p class="small">Les kilos du colis ne sont retirés de la capacité du trajet qu’après la validation du paiement par le voyageur.</p>
+        <div class="field" id="reference-field" hidden>
+          <label for="payment-reference">Référence du paiement (facultatif)</label>
+          <input id="payment-reference" maxlength="100" type="text" placeholder="Ex. numéro de transaction">
+        </div>
         <div class="actions">
-          <button class="btn" id="pay" hidden>Simuler le paiement</button>
+          <button class="btn" id="pay" hidden>Déclarer mon paiement</button>
+          <button class="btn" id="validate-payment" hidden>Confirmer la réception du paiement</button>
           <button class="btn" id="pickup" hidden>Confirmer la prise en charge</button>
           <button class="btn" id="deliver" hidden>Confirmer la livraison reçue</button>
         </div>
+        <form method="post" id="reject-form" class="space-top" hidden>
+          <label for="reject-reason">Motif du refus du paiement</label>
+          <textarea id="reject-reason" name="reason" required maxlength="500"></textarea>
+          <button class="btn danger" type="submit">Refuser le paiement</button>
+        </form>
       </section>
       <section class="card" aria-labelledby="messages-title">
         <h2 id="messages-title">Messages</h2>

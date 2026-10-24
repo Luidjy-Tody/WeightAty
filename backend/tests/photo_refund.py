@@ -19,7 +19,11 @@ def verify(mod):
     with a.opener.open(mod.BASE+p['photo']) as response:assert response.status==200
     b.post('saveDraft',{**data,'id':p['id'],'photo':png},409)
     a.post('updateRequest',{'id':r['id'],'status':'Acceptée'})
+    assert a.get('trip&id='+t['id'])['capacity']==8
     b.post('pay',{'id':r['id']})
+    assert a.get('trip&id='+t['id'])['capacity']==8
+    a.post('validatePayment',{'id':r['id']})
+    assert a.get('trip&id='+t['id'])['capacity']==6
     b.post('updateRequest',{'id':r['id'],'status':'Annulée'})
     assert a.get('trip&id='+t['id'])['capacity']==8
     assert b.get('transport&id='+r['id'])['refund'] is not None

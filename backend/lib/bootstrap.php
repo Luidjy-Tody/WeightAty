@@ -48,7 +48,7 @@ function requestRow(int $id, array $u): array {
     need($u['id']==$r['expediteur_id'] || $u['id']==$r['voyageur_id'],'Accès interdit.',403); return $r;
 }
 function refundDemo(int $rid): void {
-    query('INSERT IGNORE INTO remboursement(paiement_id) SELECT id FROM paiement WHERE demande_id=?',[$rid]);
+    query("INSERT IGNORE INTO remboursement(paiement_id) SELECT id FROM paiement WHERE demande_id=? AND statut='valide'",[$rid]);
 }
 function cancelTrip(int $id, array $u, bool $asAdmin=false): array {
     $t=one('SELECT * FROM trajet WHERE id=?',[$id]); need((bool)$t,'Trajet introuvable.',404);
@@ -72,7 +72,13 @@ function publicUser(array $u, bool $private=false): array {
     if ($private) $result+=['email'=>$u['email'],'phone'=>$u['telephone']]; return $result;
 }
 function capacity(int $tid): float {
-    return (float)query("SELECT t.poids_total-COALESCE((SELECT SUM(c.poids) FROM demande_transport d JOIN colis c ON c.id=d.colis_id WHERE d.trajet_id=t.id AND d.statut='acceptee'),0) FROM trajet t WHERE t.id=?",[$tid])->fetchColumn();
+    return (float)query("SELECT t.poids_total-COALESCE((SELECT SUM(c.poids) FROM demande_transport d JOIN colis c ON c.id=d.colis_id JOIN paiement p ON p.demande_id=d.id AND p.statut='valide' WHERE d.trajet_id=t.id AND d.statut='acceptee'),0) FROM trajet t WHERE t.id=?",[$tid])->fetchColumn();
+}
+function kg(float $v): string { return rtrim(rtrim(number_format(max(0,$v),2,'.',''),'0'),'.'); }
+function capacityAlert(array $r, float $left): string {
+    $message='Capacité insuffisante : le colis pèse '.kg((float)$r['poids']).' kg mais il ne reste que '.kg($left).' kg sur le trajet.';
+    notify((int)$r['expediteur_id'],(int)$r['id'],$message);notify((int)$r['voyageur_id'],(int)$r['id'],$message);
+    return $message;
 }
 function tripView(array $t): array {
     return ['id'=>(string)$t['id'],'ownerId'=>(string)$t['voyageur_id'],'from'=>$t['depart'],'to'=>$t['destination'],
