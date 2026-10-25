@@ -219,11 +219,20 @@ function dispatch(string $op, array $d): mixed {
         query('INSERT INTO suivi_transport(demande_id,date_prise_en_charge) VALUES (?,UTC_TIMESTAMP())',[$r['id']]);query("UPDATE colis SET statut='pris_en_charge' WHERE id=?",[$r['colis_id']]);
         notify((int)$r['expediteur_id'],(int)$r['id'],'Colis pris en charge.');return ['ok'=>true];
     case 'deliver':
-        $r=requestRow(ident($d['id']??null),$u);need($uid==$r['expediteur_id'],'Seul l’expéditeur confirme la livraison.',403);
+        $r=requestRow(ident($d['id']??null),$u);need($uid==$r['voyageur_id'],'Seul le voyageur déclare la livraison.',403);
         need($r['statut']==='acceptee' && $r['colis_statut']==='pris_en_charge','Colis non pris en charge.',409);
+        $s=one('SELECT date_livraison_declaree FROM suivi_transport WHERE demande_id=?',[$r['id']]);need((bool)$s && $s['date_livraison_declaree']===null,'Livraison déjà déclarée : en attente de la confirmation de l’expéditeur.',409);
+        query('UPDATE suivi_transport SET date_livraison_declaree=UTC_TIMESTAMP() WHERE demande_id=?',[$r['id']]);
+        notify((int)$r['expediteur_id'],(int)$r['id'],'Le voyageur indique avoir livré votre colis. Confirmez la réception, ou signalez un problème si vous ne l’avez pas reçu.');
+        notify($uid,(int)$r['id'],'Livraison déclarée. En attente de la confirmation de l’expéditeur.');audit($uid,'livraison_declaree',(int)$r['id']);return ['ok'=>true,'status'=>'livraison_declaree'];
+    case 'confirmReceipt':
+        $r=requestRow(ident($d['id']??null),$u);need($uid==$r['expediteur_id'],'Seul l’expéditeur confirme la réception.',403);
+        need($r['statut']==='acceptee' && $r['colis_statut']==='pris_en_charge','Colis non pris en charge.',409);
+        need((bool)one('SELECT demande_id FROM suivi_transport WHERE demande_id=? AND date_livraison_declaree IS NOT NULL',[$r['id']]),'Le voyageur n’a pas encore déclaré la livraison.',409);
         query('UPDATE suivi_transport SET date_livraison=UTC_TIMESTAMP() WHERE demande_id=?',[$r['id']]);query("UPDATE colis SET statut='livre' WHERE id=?",[$r['colis_id']]);
         if (!one("SELECT d.id FROM demande_transport d JOIN colis c ON c.id=d.colis_id WHERE d.trajet_id=? AND (d.statut='en_attente' OR (d.statut='acceptee' AND c.statut<>'livre'))",[$r['trajet_id']])) query("UPDATE trajet SET statut='termine' WHERE id=?",[$r['trajet_id']]);
-        notify((int)$r['voyageur_id'],(int)$r['id'],'Livraison confirmée.');return ['ok'=>true];
+        notify((int)$r['voyageur_id'],(int)$r['id'],'Réception confirmée par l’expéditeur : livraison terminée. Vous pouvez laisser un avis.');
+        notify($uid,(int)$r['id'],'Réception confirmée. Vous pouvez laisser un avis.');audit($uid,'reception_confirmee',(int)$r['id']);return ['ok'=>true,'status'=>'livre'];
     case 'review':
         $r=requestRow(ident($d['id']??null),$u);need($r['colis_statut']==='livre' && (bool)one('SELECT demande_id FROM suivi_transport WHERE demande_id=? AND date_livraison IS NOT NULL',[$r['id']]),'Avis possible seulement après livraison.',409);
         $note=ident($d['note']??null);need($note<=5,'La note doit être comprise entre 1 et 5.');

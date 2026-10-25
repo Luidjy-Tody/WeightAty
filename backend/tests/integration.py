@@ -87,7 +87,12 @@ def suite():
     assert sender.get('transport&id='+r['id'])['payment']['statut']=='valide'
     # Une annulation après prise en charge sera refusée ci-dessous.
     a.post('pickup',{'id':r['id']});sender.post('updateRequest',{'id':r['id'],'status':'Annulée'},409);a.post('cancelTrip',{'id':t['id']},409)
-    a.post('deliver',{'id':r['id']},403);sender.post('deliver',{'id':r['id']})
+    sender.post('deliver',{'id':r['id']},403)  # seul le voyageur déclare la livraison
+    sender.post('confirmReceipt',{'id':r['id']},409)  # pas encore déclarée
+    a.post('confirmReceipt',{'id':r['id']},403)  # seul l'expéditeur confirme
+    a.post('deliver',{'id':r['id']});a.post('deliver',{'id':r['id']},409)
+    sender.post('review',{'id':r['id'],'note':5,'comment':'Trop tôt'},409)  # avis seulement après confirmation
+    sender.post('confirmReceipt',{'id':r['id']});sender.post('confirmReceipt',{'id':r['id']},409)
     sender.post('review',{'id':r['id'],'note':5,'comment':'Livré'})
     sender.post('review',{'id':r['id'],'note':5,'comment':'Doublon'},409)
     a.post('review',{'id':r['id'],'note':6,'comment':'Non'},422)

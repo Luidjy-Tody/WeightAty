@@ -61,17 +61,26 @@
         <p id="transport-status"></p><p id="transport-dates"></p>
         <p id="transport-price"></p>
         <div id="payment-summary" class="notice" role="status" hidden></div>
+        <div id="delivery-note" class="space-bottom" role="status" hidden></div>
         <p>Paiement de démonstration : aucun débit bancaire. Tarif de démonstration, sans valeur contractuelle.</p>
         <p class="small">Les kilos du colis ne sont retirés de la capacité du trajet qu’après la validation du paiement par le voyageur.</p>
-        <div class="field" id="reference-field" hidden>
-          <label for="payment-reference">Référence du paiement (facultatif)</label>
-          <input id="payment-reference" maxlength="100" type="text" placeholder="Ex. numéro de transaction">
-        </div>
+        <form method="post" id="card-form" class="space-bottom" autocomplete="off" novalidate hidden>
+          <h3>Paiement par carte (simulation)</h3>
+          <p class="notice warning" role="note">Simulation : aucun débit réel. Utilisez une carte de test : <strong>4242 4242 4242 4242</strong> (acceptée) ou <strong>4000 0000 0000 0002</strong> (refusée), une date future et un CVC à 3 chiffres. Ne saisissez jamais votre vraie carte.</p>
+          <div class="form-grid">
+            <div class="field"><label for="card-name">Titulaire de la carte</label><input id="card-name" name="name" maxlength="60" type="text" autocomplete="off" aria-describedby="card-name-error"><p class="error" id="card-name-error" role="alert"></p></div>
+            <div class="field"><label for="card-number">Numéro de carte</label><input id="card-number" name="number" inputmode="numeric" maxlength="23" type="text" autocomplete="off" placeholder="4242 4242 4242 4242" aria-describedby="card-number-error"><p class="error" id="card-number-error" role="alert"></p></div>
+            <div class="field"><label for="card-expiry">Expiration (MM/AA)</label><input id="card-expiry" name="expiry" inputmode="numeric" maxlength="5" type="text" autocomplete="off" placeholder="12/30" aria-describedby="card-expiry-error"><p class="error" id="card-expiry-error" role="alert"></p></div>
+            <div class="field"><label for="card-cvc">CVC</label><input id="card-cvc" name="cvc" inputmode="numeric" maxlength="3" type="password" autocomplete="off" placeholder="123" aria-describedby="card-cvc-error"><p class="error" id="card-cvc-error" role="alert"></p></div>
+          </div>
+          <p class="small">Le numéro complet et le CVC restent dans votre navigateur : seuls le type de carte, les 4 derniers chiffres et une référence de simulation sont enregistrés.</p>
+          <div class="actions"><button class="btn" id="pay" type="submit">Payer (simulation)</button></div>
+        </form>
         <div class="actions">
-          <button class="btn" id="pay" hidden>Déclarer mon paiement</button>
           <button class="btn" id="validate-payment" hidden>Confirmer la réception du paiement</button>
           <button class="btn" id="pickup" hidden>Confirmer la prise en charge</button>
-          <button class="btn" id="deliver" hidden>Confirmer la livraison reçue</button>
+          <button class="btn" id="deliver" hidden>J’ai livré le colis</button>
+          <button class="btn" id="confirm-receipt" hidden>J’ai bien reçu le colis</button>
         </div>
         <form method="post" id="reject-form" class="space-top" hidden>
           <label for="reject-reason">Motif du refus du paiement</label>
