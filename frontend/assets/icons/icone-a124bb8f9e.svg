@@ -1,1 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#087c63" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg>Rechercher
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 642 642" width="642" height="642">
+  <g fill="none" stroke="#22C55E" stroke-width="60" stroke-linecap="round">
+    <circle cx="241" cy="241" r="210"/>
+    <line x1="432" y1="432" x2="602" y2="602" stroke-width="78"/>
+  </g>
+</svg>
